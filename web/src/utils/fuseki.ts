@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -22,15 +22,15 @@ const DATASET_SIZE_QUERY_1 = "select (count(*) as ?count) {?s ?p ?o}";
 const DATASET_SIZE_QUERY_2 =
   "select ?g (count(*) as ?count) {graph ?g {?s ?p ?o}} group by ?g";
 
-class FusekiService {
+export class FusekiService {
   isOffline: boolean;
   pathname: string;
-  constructor(location: Location) {
+  constructor(pathname: string) {
     this.isOffline = true;
-    this.pathname = location.pathname;
+    this.pathname = pathname;
   }
 
-  getFusekiUrl(url: string) {
+  getFusekiUrl = (url: string) => {
     // remove leading `/`'s
     let normalizedUrl = url;
     while (normalizedUrl.startsWith("/") && normalizedUrl.length > 0) {
@@ -40,14 +40,14 @@ class FusekiService {
       ? this.pathname
       : `${this.pathname}/`;
     return `${pathname}${normalizedUrl}`;
-  }
+  };
 
-  async getServerData() {
+  getServerData = async (): Promise<GetServerDataResponse> => {
     const response = await axios.get(this.getFusekiUrl("/$/server"));
-    return response.data;
-  }
+    return response.data as GetServerDataResponse;
+  };
 
-  async getServerStatus() {
+  getServerStatus = async () => {
     const startTime = new Date().getTime();
     try {
       await axios.get(this.getFusekiUrl("/$/ping"));
@@ -58,20 +58,34 @@ class FusekiService {
       this.isOffline = true;
       return false;
     }
-  }
+  };
 
-  // _duration(startTime) {
-  //   return new Date().getTime() - startTime;
-  // }
-
-  async getDatasetStats(datasetName: string) {
+  getDatasetStats = async (datasetName: string) => {
     const response = await axios.get(
       this.getFusekiUrl(`/$/stats/${datasetName}`)
     );
     return response.data;
-  }
+  };
 
-  async getDatasetSize(datasetName: string, endpoint: string) {
+  queryDataset = async ({
+    datasetName,
+    query,
+  }: {
+    datasetName: string;
+    query: string;
+  }) => {
+    if (datasetName.includes("/")) {
+      datasetName = datasetName.remove("/");
+    }
+
+    const { data } = await axios.get(
+      this.getFusekiUrl(`/${datasetName}/query`),
+      { params: { query } }
+    );
+    return data;
+  };
+
+  getDatasetSize = async (datasetName: string, endpoint: string) => {
     const promisesResult = await Promise.all([
       axios.get(this.getFusekiUrl(`/${datasetName}/${endpoint}`), {
         params: {
@@ -94,17 +108,23 @@ class FusekiService {
       results[binding.g.value] = binding.count.value;
     });
     return results;
-  }
+  };
 
-  async deleteDataset(datasetName: string) {
+  deleteDataset = async (datasetName: string) => {
     await axios.delete(this.getFusekiUrl(`/$/datasets${datasetName}`));
-  }
+  };
 
-  async backupDataset(datasetName: string) {
+  backupDataset = async (datasetName: string) => {
     return await axios.post(this.getFusekiUrl(`/$/backup${datasetName}`));
-  }
+  };
 
-  async createDataset(datasetName: string, datasetType: string) {
+  createDataset = async ({
+    datasetName,
+    datasetType,
+  }: {
+    datasetName: string;
+    datasetType: string;
+  }) => {
     const data = qs.stringify({
       dbName: datasetName,
       dbType: datasetType,
@@ -134,13 +154,13 @@ class FusekiService {
       }
       throw error;
     }
-  }
+  };
 
-  async getTasks() {
+  getTasks() {
     return axios.get(this.getFusekiUrl("/$/tasks"));
   }
 
-  async countGraphsTriples(datasetName: string, endpoint: string) {
+  countGraphsTriples = async (datasetName: string, endpoint: string) => {
     const promisesResult = await Promise.all([
       axios.get(this.getFusekiUrl(`/${datasetName}/${endpoint}`), {
         params: {
@@ -161,9 +181,9 @@ class FusekiService {
       results[binding.g.value] = binding.count.value;
     });
     return results;
-  }
+  };
 
-  async fetchGraph(datasetName: string, graphName: string) {
+  fetchGraph = async (datasetName: string, graphName: string) => {
     return await axios.get(this.getFusekiUrl(`/${datasetName}`), {
       params: {
         graph: graphName,
@@ -172,9 +192,9 @@ class FusekiService {
         Accept: "text/turtle; charset=utf-8",
       },
     });
-  }
+  };
 
-  async saveGraph(datasetName: string, graphName: string, code: string) {
+  saveGraph = async (datasetName: string, graphName: string, code: string) => {
     return await axios
       .put(this.getFusekiUrl(`/${datasetName}`), code, {
         params: {
@@ -188,7 +208,26 @@ class FusekiService {
       .catch((error) => {
         throw new Error(error.response.data);
       });
-  }
+  };
 }
 
-export default FusekiService;
+export const fusekiClient = new FusekiService("http://localhost:3030");
+
+// Types
+interface GetServerDataResponse {
+  version: string;
+  built: string;
+  startDateTime: string;
+  uptime: number;
+  datasets?: DatasetsEntity[] | null;
+}
+interface DatasetsEntity {
+  "ds.name": string;
+  "ds.state": boolean;
+  "ds.services"?: DsServicesEntity[] | null;
+}
+interface DsServicesEntity {
+  "srv.type": string;
+  "srv.description": string;
+  "srv.endpoints"?: string[] | null;
+}
