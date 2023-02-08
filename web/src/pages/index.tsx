@@ -19,7 +19,7 @@ const AuthShowcase: React.FC = () => {
   const router = useRouter();
   useEffect(() => {
     if (sessionData?.user) {
-      router.push("/dashboard").then(console.log).catch(console.error);
+      router.push("/dashboard/datasets").then(console.log).catch(console.error);
     }
   }, [router, sessionData?.user]);
 

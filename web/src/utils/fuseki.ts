@@ -48,7 +48,6 @@ export class FusekiService {
   };
 
   getServerStatus = async () => {
-    const startTime = new Date().getTime();
     try {
       await axios.get(this.getFusekiUrl("/$/ping"));
 
