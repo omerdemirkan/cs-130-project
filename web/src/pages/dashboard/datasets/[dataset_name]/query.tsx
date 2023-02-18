@@ -7,7 +7,7 @@ import { Editor } from "../../../../client/components/Editor";
 import { useRouter } from "next/router";
 
 import { InboxOutlined } from "@ant-design/icons";
-import { Button, Drawer, Space, UploadProps } from "antd";
+import { Button, Drawer, Space } from "antd";
 import { message, Upload } from "antd";
 
 const { Dragger } = Upload;
@@ -47,42 +47,21 @@ function QueryPage() {
       />
       <div className="flex h-screen items-start gap-4">
         <div className="w-72">
-          <Dragger
-            name="file"
-            multiple
-            action={fusekiClient.getFusekiUploadUrl(datasetName)}
-            onChange={(info) => {
-              const { status } = info.file;
-              if (status !== "uploading") {
-                console.log(info.file, info.fileList);
-              }
-              console.log(info);
-              if (status === "done") {
-                void messageApi.open({
-                  type: "success",
-                  content: `${info.file.name} file uploaded successfully.`,
-                });
-              } else if (status === "error") {
-                void messageApi.open({
-                  type: "error",
-                  content: `${info.file.name} file upload failed.`,
-                });
-              }
-            }}
-            onDrop={(e) => {
-              console.log("Dropped files", e.dataTransfer.files);
-            }}
-          >
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">
-              Click or drag file to this area to upload
-            </p>
-            <p className="ant-upload-hint">
-              Support for a single or bulk upload of .ttl files (RDF format).
-            </p>
-          </Dragger>
+          <FileUploadDragger
+            datasetName={datasetName}
+            onSuccess={() =>
+              void messageApi.open({
+                type: "success",
+                content: `File uploaded successfully.`,
+              })
+            }
+            onError={() =>
+              void messageApi.open({
+                type: "error",
+                content: `File uploaded successfully.`,
+              })
+            }
+          />
         </div>
         <main className="flex-shrink flex-grow">
           <Button onClick={() => setEditorDrawerOpen(true)}>
@@ -133,5 +112,50 @@ const EditorDrawer: React.FC<EditorDrawerProps> = ({
         <Editor value={query} onChange={setQuery} />
       </div>
     </Drawer>
+  );
+};
+
+type FileUploadDraggerProps = {
+  datasetName: string;
+  onSuccess(): void;
+  onError(): void;
+};
+
+const FileUploadDragger: React.FC<FileUploadDraggerProps> = ({
+  datasetName,
+  onSuccess,
+  onError,
+}) => {
+  return (
+    <Dragger
+      name="file"
+      multiple
+      action={fusekiClient.getFusekiUploadUrl(datasetName)}
+      onChange={(info) => {
+        const { status } = info.file;
+        if (status !== "uploading") {
+          console.log(info.file, info.fileList);
+        }
+        console.log(info);
+        if (status === "done") {
+          onSuccess();
+        } else if (status === "error") {
+          onError();
+        }
+      }}
+      onDrop={(e) => {
+        console.log("Dropped files", e.dataTransfer.files);
+      }}
+    >
+      <p className="ant-upload-drag-icon">
+        <InboxOutlined />
+      </p>
+      <p className="ant-upload-text">
+        Click or drag file to this area to upload
+      </p>
+      <p className="ant-upload-hint">
+        Support for a single or bulk upload of .ttl files (RDF format).
+      </p>
+    </Dragger>
   );
 };
