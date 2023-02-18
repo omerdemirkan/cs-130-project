@@ -9,13 +9,9 @@ import { useRouter } from "next/router";
 import { InboxOutlined } from "@ant-design/icons";
 import { Button, Drawer, Space } from "antd";
 import { message, Upload } from "antd";
+import { useSparqlEditorStore } from "../../../../client/store/editor";
 
 const { Dragger } = Upload;
-
-const INITIAL_QUERY = `SELECT * WHERE {
-  ?sub ?pred ?obj
-} LIMIT 10
-`;
 
 function QueryPage() {
   const [messageApi, messageContextHolder] = message.useMessage();
@@ -88,7 +84,7 @@ const EditorDrawer: React.FC<EditorDrawerProps> = ({
   onSubmit,
   loading,
 }) => {
-  const [query, setQuery] = useState(INITIAL_QUERY);
+  const { editorText, setEditorText } = useSparqlEditorStore();
   return (
     <Drawer
       title="Custom SPARQL Query"
@@ -100,7 +96,7 @@ const EditorDrawer: React.FC<EditorDrawerProps> = ({
         <Space>
           <Button
             type="primary"
-            onClick={() => onSubmit(query)}
+            onClick={() => onSubmit(editorText)}
             loading={loading}
           >
             SEND
@@ -109,7 +105,7 @@ const EditorDrawer: React.FC<EditorDrawerProps> = ({
       }
     >
       <div className="rounded-md border-2 border-gray-300 p-2">
-        <Editor value={query} onChange={setQuery} />
+        <Editor value={editorText} onChange={setEditorText} />
       </div>
     </Drawer>
   );
