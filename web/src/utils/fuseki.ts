@@ -42,6 +42,10 @@ export class FusekiService {
     return `${pathname}${normalizedUrl}`;
   };
 
+  getFusekiUploadUrl = (datasetName: string) => {
+    return this.getFusekiUrl(`${datasetName}/data`);
+  };
+
   getServerData = async (): Promise<GetServerDataResponse> => {
     const response = await axios.get(this.getFusekiUrl("/$/server"));
     return response.data as GetServerDataResponse;
