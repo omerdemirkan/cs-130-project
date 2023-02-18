@@ -7,27 +7,29 @@ import { Editor } from "../../../../client/components/Editor";
 import { useRouter } from "next/router";
 
 import { InboxOutlined } from "@ant-design/icons";
-import type { UploadProps } from "antd";
+import { Button, Drawer, Space, UploadProps } from "antd";
 import { message, Upload } from "antd";
 
 const { Dragger } = Upload;
 
-const INITIAL_QUERY = `
-SELECT * WHERE {
+const INITIAL_QUERY = `SELECT * WHERE {
   ?sub ?pred ?obj
 } LIMIT 10
 `;
 
 function QueryPage() {
   const [messageApi, messageContextHolder] = message.useMessage();
-  const [query, setQuery] = useState(INITIAL_QUERY);
+  const [editorDrawerOpen, setEditorDrawerOpen] = useState(false);
   const router = useRouter();
   const queryMutation = useMutation({
     mutationFn: fusekiClient.queryDataset,
+    onSuccess: () => setEditorDrawerOpen(false),
+    onFailure: () =>
+      messageApi.open({ type: "error", content: "Something went wrong!" }),
   });
 
   const datasetName = router.query["dataset_name"] as string;
-  function sendQuery() {
+  function handleSendQuery(query: string) {
     if (typeof datasetName !== "string") {
       return;
     }
@@ -37,6 +39,12 @@ function QueryPage() {
   return (
     <>
       {messageContextHolder}
+      <EditorDrawer
+        open={editorDrawerOpen}
+        onClose={() => setEditorDrawerOpen(false)}
+        onSubmit={handleSendQuery}
+        loading={queryMutation.isLoading}
+      />
       <div className="flex h-screen items-start gap-4">
         <div className="w-72">
           <Dragger
@@ -50,12 +58,12 @@ function QueryPage() {
               }
               console.log(info);
               if (status === "done") {
-                messageApi.open({
+                void messageApi.open({
                   type: "success",
                   content: `${info.file.name} file uploaded successfully.`,
                 });
               } else if (status === "error") {
-                messageApi.open({
+                void messageApi.open({
                   type: "error",
                   content: `${info.file.name} file upload failed.`,
                 });
@@ -77,8 +85,9 @@ function QueryPage() {
           </Dragger>
         </div>
         <main className="flex-shrink flex-grow">
-          <Editor value={query} onChange={setQuery} />
-          <button onClick={sendQuery}>Send query</button>
+          <Button onClick={() => setEditorDrawerOpen(true)}>
+            Write SPARQL Query
+          </Button>
         </main>
       </div>
     </>
@@ -87,4 +96,42 @@ function QueryPage() {
 
 export default withAuth(QueryPage);
 
-const draggerProps: UploadProps = {};
+type EditorDrawerProps = {
+  open: boolean;
+  onClose(): void;
+  onSubmit(editorValue: string): void;
+  loading: boolean;
+};
+
+const EditorDrawer: React.FC<EditorDrawerProps> = ({
+  open,
+  onClose,
+  onSubmit,
+  loading,
+}) => {
+  const [query, setQuery] = useState(INITIAL_QUERY);
+  return (
+    <Drawer
+      title="Custom SPARQL Query"
+      placement="right"
+      width={700}
+      onClose={onClose}
+      open={open}
+      extra={
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => onSubmit(query)}
+            loading={loading}
+          >
+            SEND
+          </Button>
+        </Space>
+      }
+    >
+      <div className="rounded-md border-2 border-gray-300 p-2">
+        <Editor value={query} onChange={setQuery} />
+      </div>
+    </Drawer>
+  );
+};
