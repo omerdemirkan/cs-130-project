@@ -122,7 +122,7 @@ export class FusekiService {
     datasetType,
   }: {
     datasetName: string;
-    datasetType: string;
+    datasetType: "tdb2" | "mem";
   }) => {
     const data = qs.stringify({
       dbName: datasetName,
