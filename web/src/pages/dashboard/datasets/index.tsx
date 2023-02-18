@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { withAuth } from "../../../client/hoc/withAuth";
@@ -9,28 +9,34 @@ import { useRouter } from "next/router";
 
 const DashboardPage: React.FC = () => {
   const { data: sessionData } = useSession();
+  const [createDatasetModalOpen, setCreateDatasetModalOpen] = useState(false);
 
   const { data: datasetsData, isLoading: isDatasetsLoading } = useQuery(
     ["fuseki", "getServerData"],
     () => fusekiClient.getServerData()
   );
 
-  const router = useRouter();
-  const handleCreateNewDataset = async (datasetName: string) => {
-    try {
+  const createDatasetMutation = useMutation({
+    mutationFn: async (datasetName: string) => {
       await fusekiClient.createDataset({ datasetName, datasetType: "tdb2" });
       await router.push(`/dashboard/datasets/${datasetName}/query`);
-    } catch (error) {
-      console.log("Error in creating dataset!", error);
-    }
-  };
+    },
+  });
+
+  const router = useRouter();
 
   return (
     <div>
       <p>{sessionData && <span>Logged in as {sessionData.user?.name}</span>}</p>
-      <CreateDatasetModalTrigger onSubmit={handleCreateNewDataset}>
-        <Button>Create new dataset</Button>
-      </CreateDatasetModalTrigger>
+      <Button onClick={() => setCreateDatasetModalOpen(true)}>
+        Create new dataset
+      </Button>
+      <CreateDatasetModal
+        open={createDatasetModalOpen}
+        onClose={() => setCreateDatasetModalOpen(false)}
+        onSubmit={createDatasetMutation.mutate}
+        loading={createDatasetMutation.isLoading}
+      />
       {datasetsData?.datasets?.length === 0 ? (
         <p>Hmm, looks like you don&apos;t have any datasets</p>
       ) : null}
@@ -55,34 +61,37 @@ const DashboardPage: React.FC = () => {
   );
 };
 
-type CreateDatasetModalTriggerProps = {
-  children: React.ReactNode;
+type CreateDatasetModalProps = {
   onSubmit(datasetName: string): void | Promise<void>;
+  open: boolean;
+  onClose(): void;
+  loading: boolean;
 };
 
-const CreateDatasetModalTrigger: React.FC<CreateDatasetModalTriggerProps> = ({
-  children,
+const CreateDatasetModal: React.FC<CreateDatasetModalProps> = ({
   onSubmit,
+  open,
+  onClose,
+  loading,
 }) => {
-  const [open, setOpen] = useState(false);
   const [datasetName, setDatasetName] = useState("");
   const handleCancel = useCallback(() => {
-    setOpen((prev) => !prev);
+    onClose();
     setDatasetName("");
-  }, []);
+  }, [onClose]);
   const handleOk = useCallback(() => {
-    onSubmit(datasetName);
+    void onSubmit(datasetName);
     setDatasetName("");
   }, [datasetName, onSubmit]);
 
   return (
     <>
-      <span onClick={handleCancel}>{children}</span>
       <Modal
         open={open}
         onCancel={handleCancel}
         onOk={handleOk}
         title="Create a New Dataset"
+        confirmLoading={loading}
       >
         <p>We'll first need to create a dataset to hold our .ttl files!</p>
         <Input
