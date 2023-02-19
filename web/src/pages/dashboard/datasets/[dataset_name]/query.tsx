@@ -1,17 +1,22 @@
 import { useMutation } from "@tanstack/react-query";
 import { withAuth } from "../../../../client/hoc/withAuth";
 import { fusekiClient } from "../../../../utils/fuseki";
+import type {
+  FusekiQueryResult,
+  FusekiQueryBinding,
+} from "../../../../utils/fuseki";
 import { useState } from "react";
 
 import { Editor } from "../../../../client/components/Editor";
 import { useRouter } from "next/router";
 
 import { InboxOutlined } from "@ant-design/icons";
-import { Button, Drawer, Space } from "antd";
+import { Button, Drawer, Space, Table, Tooltip } from "antd";
 import { message, Upload } from "antd";
 import { useSparqlEditorStore } from "../../../../client/store/editor";
 import { NetworkGraph } from "../../../../client/components/NetworkGraph";
 import { useGraphStore } from "../../../../client/store/graph";
+import type { GraphNode } from "../../../../client/store/graph";
 
 const { Dragger } = Upload;
 
@@ -19,13 +24,10 @@ function QueryPage() {
   const [messageApi, messageContextHolder] = message.useMessage();
   const [editorDrawerOpen, setEditorDrawerOpen] = useState(false);
   const router = useRouter();
-  const { nodes, edges, setFusekiQueryResult } = useGraphStore();
+  const { nodes, edges, setStartNode, addFusekiExpansionQueryResult } =
+    useGraphStore();
   const queryMutation = useMutation({
     mutationFn: fusekiClient.queryDataset,
-    onSuccess: (fusekiQueryResults) => {
-      setFusekiQueryResult(fusekiQueryResults);
-      setEditorDrawerOpen(false);
-    },
     onFailure: () =>
       messageApi.open({ type: "error", content: "Something went wrong!" }),
   });
@@ -38,6 +40,42 @@ function QueryPage() {
     queryMutation.mutate({ datasetName, query });
   }
 
+  async function handleNodeSearch(node: GraphNode) {
+    const expansionQueryResult = await fusekiClient.expansionQueryDataset({
+      datasetName,
+      expansionNode: node,
+    });
+
+    if (!expansionQueryResult.results.bindings.length) {
+      await messageApi.open({
+        type: "error",
+        content: `Either not a node or has no neighbors`,
+      });
+      return;
+    }
+
+    setStartNode(node);
+    setEditorDrawerOpen(false);
+  }
+
+  async function handleNodeClicked(node: GraphNode) {
+    const expansionQueryResult = await fusekiClient.expansionQueryDataset({
+      datasetName,
+      expansionNode: node,
+    });
+
+    if (!expansionQueryResult.results.bindings.length) {
+      await messageApi.open({
+        type: "error",
+        content: `No expansions possible`,
+      });
+      return;
+    }
+
+    addFusekiExpansionQueryResult(expansionQueryResult);
+    setEditorDrawerOpen(false);
+  }
+
   return (
     <>
       {messageContextHolder}
@@ -46,6 +84,8 @@ function QueryPage() {
         onClose={() => setEditorDrawerOpen(false)}
         onSubmit={handleSendQuery}
         loading={queryMutation.isLoading}
+        queryResults={queryMutation.data}
+        onNodeSearch={handleNodeSearch}
       />
       <div className="flex h-screen items-start gap-4">
         <div className="w-72">
@@ -69,7 +109,11 @@ function QueryPage() {
           <Button onClick={() => setEditorDrawerOpen(true)}>
             Write SPARQL Query
           </Button>
-          <NetworkGraph nodes={nodes} edges={edges} />
+          <NetworkGraph
+            nodes={nodes}
+            edges={edges}
+            onNodeClick={(networkNode) => handleNodeClicked(networkNode.data)}
+          />
         </main>
       </div>
     </>
@@ -83,6 +127,8 @@ type EditorDrawerProps = {
   onClose(): void;
   onSubmit(editorValue: string): void;
   loading: boolean;
+  queryResults?: FusekiQueryResult;
+  onNodeSearch?(node: GraphNode): void | Promise<void>;
 };
 
 const EditorDrawer: React.FC<EditorDrawerProps> = ({
@@ -90,8 +136,12 @@ const EditorDrawer: React.FC<EditorDrawerProps> = ({
   onClose,
   onSubmit,
   loading,
+  queryResults,
+  onNodeSearch,
 }) => {
   const { editorText, setEditorText } = useSparqlEditorStore();
+
+  const tableColumns = queryResults?.head.vars;
   return (
     <Drawer
       title="Custom SPARQL Query"
@@ -113,6 +163,38 @@ const EditorDrawer: React.FC<EditorDrawerProps> = ({
     >
       <div className="rounded-md border-2 border-gray-300 p-2">
         <Editor value={editorText} onChange={setEditorText} />
+
+        {queryResults ? (
+          <Table
+            dataSource={queryResults?.results.bindings.map((binding, i) => ({
+              key: i,
+              ...Object.fromEntries(
+                queryResults.head.vars.map((v) => [v, binding[v]])
+              ),
+            }))}
+            columns={queryResults.head.vars.map((v) => ({
+              title: v,
+              key: v,
+              dataIndex: v,
+              render: (binding: FusekiQueryBinding) => (
+                <Tooltip title="Click to search node">
+                  <p
+                    className="cursor-pointer"
+                    onClick={() =>
+                      void onNodeSearch?.({
+                        id: binding.value,
+                        label: binding.value,
+                        fusekiObjectType: binding.type,
+                      })
+                    }
+                  >
+                    {binding.value}
+                  </p>
+                </Tooltip>
+              ),
+            }))}
+          />
+        ) : null}
       </div>
     </Drawer>
   );
