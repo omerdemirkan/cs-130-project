@@ -27,31 +27,26 @@ type GraphStoreState = {
   setStartNode(startNode: GraphNode): void;
 };
 
-export const useGraphStore = create<GraphStoreState>()(
-  persist(
-    (set, get) => ({
-      nodes: [],
-      edges: [],
-      addFusekiExpansionQueryResult(fusekiQueryResult) {
-        const { nodes, edges } = get();
-        const { newNodes, newEdges } = processFusekiExpansionQueryResults({
-          fusekiQueryResult,
-          existingNodes: nodes,
-          existingEdges: edges,
-        });
-        set({
-          nodes: newNodes,
-          edges: newEdges,
-        });
-      },
+export const useGraphStore = create<GraphStoreState>()((set, get) => ({
+  nodes: [],
+  edges: [],
+  addFusekiExpansionQueryResult(fusekiQueryResult) {
+    const { nodes, edges } = get();
+    const { newNodes, newEdges } = processFusekiExpansionQueryResults({
+      fusekiQueryResult,
+      existingNodes: nodes,
+      existingEdges: edges,
+    });
+    set({
+      nodes: newNodes,
+      edges: newEdges,
+    });
+  },
 
-      setStartNode(startNode) {
-        set({ nodes: [startNode], edges: [] });
-      },
-    }),
-    { name: "graph" }
-  )
-);
+  setStartNode(startNode) {
+    set({ nodes: [startNode], edges: [] });
+  },
+}));
 
 function processFusekiExpansionQueryResults({
   fusekiQueryResult,

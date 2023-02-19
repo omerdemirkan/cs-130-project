@@ -11,7 +11,7 @@ import { Editor } from "../../../../client/components/Editor";
 import { useRouter } from "next/router";
 
 import { InboxOutlined } from "@ant-design/icons";
-import { Button, Drawer, Space, Table, Tooltip } from "antd";
+import { Button, Drawer, Input, Space, Table, Tooltip } from "antd";
 import { message, Upload } from "antd";
 import { useSparqlEditorStore } from "../../../../client/store/editor";
 import { NetworkGraph } from "../../../../client/components/NetworkGraph";
@@ -87,6 +87,20 @@ function QueryPage() {
         queryResults={queryMutation.data}
         onNodeSearch={handleNodeSearch}
       />
+      <div className="flex justify-center">
+        <SearchBar
+          onSearch={(val) =>
+            void handleNodeSearch({
+              id: val,
+              fusekiObjectType: val.includes("://") ? "uri" : "literal",
+              label: val,
+            })
+          }
+        />
+        <Button onClick={() => setEditorDrawerOpen(true)}>
+          Write SPARQL Query
+        </Button>
+      </div>
       <div className="flex h-screen items-start gap-4">
         <div className="w-72">
           <FileUploadDragger
@@ -106,9 +120,6 @@ function QueryPage() {
           />
         </div>
         <main className="h-full flex-shrink flex-grow">
-          <Button onClick={() => setEditorDrawerOpen(true)}>
-            Write SPARQL Query
-          </Button>
           <NetworkGraph
             nodes={nodes}
             edges={edges}
@@ -242,5 +253,26 @@ const FileUploadDragger: React.FC<FileUploadDraggerProps> = ({
         Support for a single or bulk upload of .ttl files (RDF format).
       </p>
     </Dragger>
+  );
+};
+
+type SearchBarProps = {
+  onSearch(searchStr: string): void;
+};
+
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
+  const [searchVal, setSearchValue] = useState("");
+
+  return (
+    <div>
+      <Input.Search
+        value={searchVal}
+        onChange={(e) => setSearchValue(e.target.value)}
+        onSearch={() => {
+          onSearch(searchVal);
+          setSearchValue("");
+        }}
+      />
+    </div>
   );
 };

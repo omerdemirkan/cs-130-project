@@ -96,6 +96,9 @@ export class FusekiService {
     datasetName: string;
     expansionNode: GraphNode;
   }) => {
+    console.log(expansionNode);
+    console.log(this.getAsObjectExpansionQuery(expansionNode));
+    console.log(this.getAsSubjectExpansionQuery(expansionNode));
     const [asObjectResult, asSubjectResult] = await Promise.all([
       this.queryDataset({
         datasetName,
@@ -136,9 +139,7 @@ export class FusekiService {
 
   private getAsSubjectExpansionQuery = (expansionNode: GraphNode) => {
     const nodeStrRepresentation =
-      expansionNode.fusekiObjectType === "uri"
-        ? `<${expansionNode.id}>`
-        : `"${expansionNode.id}"`;
+      this.getNodeQueryStrRepresentation(expansionNode);
 
     return `SELECT ?predicate ?object
 WHERE {
@@ -146,11 +147,22 @@ WHERE {
 }`;
   };
 
+  private getNodeQueryStrRepresentation = (expansionNode: GraphNode) => {
+    if (expansionNode.fusekiObjectType === "uri") {
+      return `<${expansionNode.id}>`;
+    }
+
+    const isNumericStr = !isNaN(expansionNode.id);
+    if (isNumericStr) {
+      return expansionNode.id;
+    }
+
+    return `"${expansionNode.id}"`;
+  };
+
   private getAsObjectExpansionQuery = (expansionNode: GraphNode) => {
     const nodeStrRepresentation =
-      expansionNode.fusekiObjectType === "uri"
-        ? `<${expansionNode.id}>`
-        : `"${expansionNode.id}"`;
+      this.getNodeQueryStrRepresentation(expansionNode);
 
     return `SELECT ?subject ?predicate
 WHERE {
