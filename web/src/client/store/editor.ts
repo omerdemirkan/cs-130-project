@@ -1,10 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-const INITIAL_SPARQL_QUERY = `SELECT * WHERE {
-  ?sub ?pred ?obj
-} LIMIT 10
-`;
+const INITIAL_SPARQL_QUERY = `SELECT ?subject ?predicate ?object
+WHERE {
+  ?subject ?predicate ?object
+}
+LIMIT 25`;
 
 type SparqlEditorStoreState = {
   editorText: string;

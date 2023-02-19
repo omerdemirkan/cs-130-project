@@ -85,7 +85,7 @@ export class FusekiService {
       this.getFusekiUrl(`/${datasetName}/query`),
       { params: { query } }
     );
-    return data;
+    return data as FusekiQueryResult;
   };
 
   getDatasetSize = async (datasetName: string, endpoint: string) => {
@@ -233,4 +233,36 @@ interface DsServicesEntity {
   "srv.type": string;
   "srv.description": string;
   "srv.endpoints"?: string[] | null;
+}
+
+export interface FusekiQueryResult {
+  head: FusekiQueryHead;
+  results: FusekiResults;
+}
+
+export interface FusekiQueryHead {
+  vars: string[];
+}
+
+export interface FusekiResults {
+  bindings: FusekiBinding[];
+}
+
+export interface FusekiBinding {
+  subject: Predicate;
+  predicate: Predicate;
+  object: FusekiObject;
+}
+
+export interface FusekiObject {
+  type: FusekiObjectType;
+  value: string;
+  datatype?: string;
+}
+
+export type FusekiObjectType = "bnode" | "literal" | "uri";
+
+export interface Predicate {
+  type: FusekiObjectType;
+  value: string;
 }

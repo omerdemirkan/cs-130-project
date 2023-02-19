@@ -10,6 +10,8 @@ import { InboxOutlined } from "@ant-design/icons";
 import { Button, Drawer, Space } from "antd";
 import { message, Upload } from "antd";
 import { useSparqlEditorStore } from "../../../../client/store/editor";
+import { NetworkGraph } from "../../../../client/components/NetworkGraph";
+import { useGraphStore } from "../../../../client/store/graph";
 
 const { Dragger } = Upload;
 
@@ -17,9 +19,13 @@ function QueryPage() {
   const [messageApi, messageContextHolder] = message.useMessage();
   const [editorDrawerOpen, setEditorDrawerOpen] = useState(false);
   const router = useRouter();
+  const { nodes, edges, setFusekiQueryResult } = useGraphStore();
   const queryMutation = useMutation({
     mutationFn: fusekiClient.queryDataset,
-    onSuccess: () => setEditorDrawerOpen(false),
+    onSuccess: (fusekiQueryResults) => {
+      setFusekiQueryResult(fusekiQueryResults);
+      setEditorDrawerOpen(false);
+    },
     onFailure: () =>
       messageApi.open({ type: "error", content: "Something went wrong!" }),
   });
@@ -59,10 +65,11 @@ function QueryPage() {
             }
           />
         </div>
-        <main className="flex-shrink flex-grow">
+        <main className="h-full flex-shrink flex-grow">
           <Button onClick={() => setEditorDrawerOpen(true)}>
             Write SPARQL Query
           </Button>
+          <NetworkGraph nodes={nodes} edges={edges} />
         </main>
       </div>
     </>
