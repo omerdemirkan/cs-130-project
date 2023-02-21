@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { api } from "../utils/api"
 
+
 const Home: NextPage = () => {
   return (
     <main>
@@ -23,19 +24,44 @@ export default Home;
  */
 const ProcedureTest: React.FC = () => {
   {/* BELOW IS OUR TESTING EXAMPLE */}
-  const status = api.example.getFusekiServerStatus.useQuery().data
+  const status = api.fuseki.getStatus.useQuery()
+  const createDataset = api.fuseki.createDataset.useMutation()
+  const uploadData = api.fuseki.uploadData.useMutation()
+
+  const onFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+
+    // We have to convert the file's contents into a string because tRPC doesn't
+    // allow file inputs?!?!? 
+    //    * Note: Unsure if mutateAsync() is needed, mutate() may be sufficient.
+    var dataset = await event.target.files[0]?.text()
+    if (dataset)
+      uploadData.mutateAsync({datasetName: 'my_dataset', dataset: dataset})
+  }
 
   return (
     <div>
-      <button
-        onClick={ () => void console.log(status ? "Fuseki is online!" : "Fuseki has passed :(") }
-      >
-        {"Click me to test if Fuseki is online!!"}
-      </button>
+      <div><button
+          onClick={ () => {
+            void console.log(status.data ? "Fuseki is online!" : "Fuseki has passed :(")
+          }}
+        >
+          {"Click me to test if Fuseki is online!!"}
+        </button></div>
+      <div><button
+          onClick={ () => {
+            createDataset.mutate({ datasetName: 'my_dataset' })
+          }}
+        > 
+        {"Click me to create a dataset!"}
+      </button></div>
+      <div>
+        <input type="file" onChange={ onFileUpload } accept =".ttl"/>
+        {"<- click to upload data to the created dataset!"}
+      </div>
     </div>
   )
-}
-
+};
 
 
 const AuthShowcase: React.FC = () => {
