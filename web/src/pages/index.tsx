@@ -25,6 +25,9 @@ export default Home;
 const ProcedureTest: React.FC = () => {
   {/* BELOW IS OUR TESTING EXAMPLE */}
   const status = api.fuseki.getStatus.useQuery()
+  const getStats = api.fuseki.getDatasetStats.useQuery({datasetName: 'my_dataset'})
+  const query = api.fuseki.queryDataset.useQuery({datasetName: 'my_dataset', query: 
+      'SELECT ?subject ?predicate ?object\nWHERE {\n   ?subject ?predicate ?object .\n}'})
   const createDataset = api.fuseki.createDataset.useMutation()
   const uploadData = api.fuseki.uploadData.useMutation()
 
@@ -48,6 +51,7 @@ const ProcedureTest: React.FC = () => {
         >
           {"Click me to test if Fuseki is online!!"}
         </button></div>
+
       <div><button
           onClick={ () => {
             createDataset.mutate({ datasetName: 'my_dataset' })
@@ -55,6 +59,23 @@ const ProcedureTest: React.FC = () => {
         > 
         {"Click me to create a dataset!"}
       </button></div>
+
+      <div><button
+          onClick={ () => {
+            void console.log(getStats.data)
+          }}
+        > 
+        {"Click me to check dataset stats!"}
+      </button></div>
+      
+      <div><button
+          onClick={ () => {
+            void console.log(query.data)
+          }}
+        > 
+        {"Click me to query the dataset!"}
+      </button></div>
+
       <div>
         <input type="file" onChange={ onFileUpload } accept =".ttl"/>
         {"<- click to upload data to the created dataset!"}

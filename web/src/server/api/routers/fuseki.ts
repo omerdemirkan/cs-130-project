@@ -31,6 +31,35 @@ export const fusekiRouter = createTRPCRouter({
                 console.error('Error:' + e);
             }
         }),
+    
+
+        
+    deleteDataset: publicProcedure
+        .input(z.object({ datasetName: z.string() }))
+        .mutation(async ({ input }) => {
+            try {
+                await fusekiClient.deleteDataset(input.datasetName)
+            } catch (e) {
+                console.error('Error:' + e);
+            }
+        }),
+
+
+
+    getDatasetStats: publicProcedure
+        .input(z.object({ datasetName: z.string() }))
+        .query(async ({ input }) => {
+            return await fusekiClient.getDatasetStats(input.datasetName)
+        }),
+
+
+
+    queryDataset: publicProcedure
+        .input(z.object({ datasetName: z.string(), query: z.string() }))
+        .query(async ({ input }) => {
+            return await fusekiClient.queryDataset(input)
+        }),
+
 
 
     // TODO: Change to protectedProcedure
