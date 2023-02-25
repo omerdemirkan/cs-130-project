@@ -17,6 +17,7 @@
 
 import axios, { isAxiosError } from "axios";
 import qs from "qs";
+import { GraphNode } from "../client/store/graph";
 
 const DATASET_SIZE_QUERY_1 = "select (count(*) as ?count) {?s ?p ?o}";
 const DATASET_SIZE_QUERY_2 =
@@ -40,6 +41,10 @@ export class FusekiService {
       ? this.pathname
       : `${this.pathname}/`;
     return `${pathname}${normalizedUrl}`;
+  };
+
+  getFusekiUploadUrl = (datasetName: string) => {
+    return this.getFusekiUrl(`${datasetName}/data`);
   };
 
   getServerData = async (): Promise<GetServerDataResponse> => {
@@ -81,7 +86,88 @@ export class FusekiService {
       this.getFusekiUrl(`/${datasetName}/query`),
       { params: { query } }
     );
-    return data;
+    return data as FusekiQueryResult;
+  };
+
+  expansionQueryDataset = async ({
+    datasetName,
+    expansionNode,
+  }: {
+    datasetName: string;
+    expansionNode: GraphNode;
+  }) => {
+    console.log(expansionNode);
+    console.log(this.getAsObjectExpansionQuery(expansionNode));
+    console.log(this.getAsSubjectExpansionQuery(expansionNode));
+    const [asObjectResult, asSubjectResult] = await Promise.all([
+      this.queryDataset({
+        datasetName,
+        query: this.getAsObjectExpansionQuery(expansionNode),
+      }),
+      this.queryDataset({
+        datasetName,
+        query: this.getAsSubjectExpansionQuery(expansionNode),
+      }),
+    ]);
+
+    const expansionNodeBinding: FusekiQueryBinding = {
+      value: expansionNode.id,
+      type: expansionNode.fusekiObjectType,
+    };
+    asObjectResult.results.bindings.forEach((binding) => {
+      binding.object = expansionNodeBinding;
+    });
+
+    asSubjectResult.results.bindings.forEach((binding) => {
+      binding.subject = expansionNodeBinding;
+    });
+
+    const expansionQueryResult: FusekiExpansionQueryResults = {
+      head: {
+        vars: ["subject", "predicate", "object"],
+      },
+      results: {
+        // @ts-ignore
+        bindings: [
+          ...asSubjectResult.results.bindings,
+          ...asObjectResult.results.bindings,
+        ],
+      },
+    };
+    return expansionQueryResult;
+  };
+
+  private getAsSubjectExpansionQuery = (expansionNode: GraphNode) => {
+    const nodeStrRepresentation =
+      this.getNodeQueryStrRepresentation(expansionNode);
+
+    return `SELECT ?predicate ?object
+WHERE {
+  ${nodeStrRepresentation} ?predicate ?object
+}`;
+  };
+
+  private getNodeQueryStrRepresentation = (expansionNode: GraphNode) => {
+    if (expansionNode.fusekiObjectType === "uri") {
+      return `<${expansionNode.id}>`;
+    }
+
+    const isNumericStr = !isNaN(expansionNode.id);
+    if (isNumericStr) {
+      return expansionNode.id;
+    }
+
+    return `"${expansionNode.id}"`;
+  };
+
+  private getAsObjectExpansionQuery = (expansionNode: GraphNode) => {
+    const nodeStrRepresentation =
+      this.getNodeQueryStrRepresentation(expansionNode);
+
+    return `SELECT ?subject ?predicate
+WHERE {
+   ?subject ?predicate ${nodeStrRepresentation}
+}`;
   };
 
   getDatasetSize = async (datasetName: string, endpoint: string) => {
@@ -122,7 +208,7 @@ export class FusekiService {
     datasetType,
   }: {
     datasetName: string;
-    datasetType: string;
+    datasetType: "tdb2" | "mem";
   }) => {
     const data = qs.stringify({
       dbName: datasetName,
@@ -230,3 +316,39 @@ interface DsServicesEntity {
   "srv.description": string;
   "srv.endpoints"?: string[] | null;
 }
+
+export interface FusekiQueryResult {
+  head: {
+    vars: string[];
+  };
+  results: {
+    bindings: FusekiQueryBindings[];
+  };
+}
+
+export type FusekiQueryBindings = {
+  [key: string]: FusekiQueryBinding;
+};
+
+export type FusekiQueryBinding = {
+  type: FusekiObjectType;
+  value: string;
+  datatype?: string;
+};
+
+export type FusekiObjectType = "bnode" | "literal" | "uri";
+
+export type FusekiExpansionQueryBindings = {
+  subject: FusekiQueryBinding;
+  predicate: FusekiQueryBinding;
+  object: FusekiQueryBinding;
+};
+
+export type FusekiExpansionQueryResults = {
+  head: {
+    vars: string[];
+  };
+  results: {
+    bindings: FusekiExpansionQueryBindings[];
+  };
+};
