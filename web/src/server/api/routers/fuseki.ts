@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-import { fusekiClient, FusekiExpansionQueryResults } from '../../../utils/fuseki'
+import { FusekiService } from '../../../utils/fuseki'
 import axios from "axios";
-import { message, Upload } from "antd";
 import { GraphNode } from "../../../client/store/graph";
+
+const fusekiClient = new FusekiService("http://localhost:3030");
 
 export const fusekiRouter = createTRPCRouter({
     /**
