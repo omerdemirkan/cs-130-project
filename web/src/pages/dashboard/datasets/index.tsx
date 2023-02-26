@@ -1,27 +1,24 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { withAuth } from "../../../client/hoc/withAuth";
-import { fusekiClient } from "../../../utils/fuseki";
 import { Button, Input, Modal } from "antd";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
+import { api } from "../../../utils/api";
 
 const DashboardPage: React.FC = () => {
   const { data: sessionData } = useSession();
   const [createDatasetModalOpen, setCreateDatasetModalOpen] = useState(false);
 
-  const { data: datasetsData, isLoading: isDatasetsLoading } = useQuery(
-    ["fuseki", "getServerData"],
-    () => fusekiClient.getServerData()
-  );
+  const serverDataQuery = api.fuseki.getServerData.useQuery();
+  const createDatasetMutation = api.fuseki.createDataset.useMutation();
 
-  const createDatasetMutation = useMutation({
-    mutationFn: async (datasetName: string) => {
-      await fusekiClient.createDataset({ datasetName, datasetType: "tdb2" });
-      await router.push(`/dashboard/datasets/${datasetName}/query`);
-    },
-  });
+  async function createDataset(datasetName: string) {
+      await createDatasetMutation.mutateAsync({ datasetName });
+      // await router.push(`/dashboard/datasets/${datasetName}/query`);
+      serverDataQuery.refetch();
+      setCreateDatasetModalOpen(false);
+  }
 
   const router = useRouter();
 
@@ -34,16 +31,16 @@ const DashboardPage: React.FC = () => {
       <CreateDatasetModal
         open={createDatasetModalOpen}
         onClose={() => setCreateDatasetModalOpen(false)}
-        onSubmit={createDatasetMutation.mutate}
+        onSubmit={createDataset}
         loading={createDatasetMutation.isLoading}
       />
-      {datasetsData?.datasets?.length === 0 ? (
+      {serverDataQuery.data?.datasets?.length === 0 ? (
         <p>Hmm, looks like you don&apos;t have any datasets</p>
       ) : null}
-      {!!datasetsData && isDatasetsLoading ? <p>Datasets are loading</p> : null}
-      {datasetsData?.datasets?.length ? (
+      {!!serverDataQuery.data && serverDataQuery.isLoading ? <p>Datasets are loading</p> : null}
+      {serverDataQuery.data?.datasets?.length ? (
         <div>
-          {datasetsData.datasets.map((dataset) => (
+          {serverDataQuery.data.datasets.map((dataset) => (
             <div key={dataset["ds.name"]}>
               <p>Dataset Name: {dataset["ds.name"]}</p>
               <Link
