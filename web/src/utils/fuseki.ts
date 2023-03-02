@@ -309,14 +309,14 @@ export class FusekiService {
 
 
     fetchGraph = async (datasetName: string, graphName: string) => {
-        return await axios.get(this.getFusekiUrl(`/${datasetName}`), {
+        return (await axios.get(this.getFusekiUrl(`/${datasetName}`), {
             params: {
                 graph: graphName,
             },
             headers: {
                 Accept: "text/turtle; charset=utf-8",
             },
-        });
+        })).data;
     };
 
 
