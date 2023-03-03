@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { InboxOutlined } from "@ant-design/icons";
 import { Button, Drawer, Input, Space, Table, Tooltip } from "antd";
 import { message, Upload } from "antd";
+import { darkTheme } from "reagraph";
 import { useSparqlEditorStore } from "../../../../client/store/editor";
 import { NetworkGraph } from "../../../../client/components/NetworkGraph";
 import { useGraphStore } from "../../../../client/store/graph";
@@ -101,6 +102,7 @@ function QueryPage() {
         </div>
         <main className="h-full flex-shrink flex-grow">
           <NetworkGraph
+            theme={darkTheme}
             labelType="all"
             nodes={nodes}
             edges={edges}
@@ -247,7 +249,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [searchVal, setSearchValue] = useState("");
 
   return (
-    <div>
+    <div id="search-bar">
       <Input.Search
         value={searchVal}
         onChange={(e) => setSearchValue(e.target.value)}
