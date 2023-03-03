@@ -101,6 +101,7 @@ function QueryPage() {
         </div>
         <main className="h-full flex-shrink flex-grow">
           <NetworkGraph
+            labelType="all"
             nodes={nodes}
             edges={edges}
             onNodeClick={(networkNode) => handleNodeClicked(networkNode.data)}
