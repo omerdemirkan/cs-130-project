@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import { InboxOutlined } from "@ant-design/icons";
 import { Button, Drawer, Input, Space, Table, Tooltip } from "antd";
 import { message, Upload } from "antd";
-import { darkTheme } from "reagraph";
+// import { darkTheme } from "reagraph";
 import { useSparqlEditorStore } from "../../../../client/store/editor";
 import { NetworkGraph } from "../../../../client/components/NetworkGraph";
 import { useGraphStore } from "../../../../client/store/graph";
@@ -68,47 +68,51 @@ function QueryPage() {
         queryResults={queryMutation.data}
         onNodeSearch={handleNodeSearch}
       />
-      <div className="flex justify-center">
-        <SearchBar
-          onSearch={(val) =>
-            void handleNodeSearch({
-              id: val,
-              fusekiObjectType: val.includes("://") ? "uri" : "literal",
-              label: val,
-            })
-          }
-        />
-        <Button onClick={() => setEditorDrawerOpen(true)}>
-          Write SPARQL Query
-        </Button>
-      </div>
-      <div className="flex h-screen items-start gap-4">
-        <div className="w-72">
-          <FileUploadDragger
-            datasetName={datasetName}
-            onSuccess={() =>
-              void messageApi.open({
-                type: "success",
-                content: `File uploaded successfully.`,
-              })
-            }
-            onError={() =>
-              void messageApi.open({
-                type: "error",
-                content: `File uploaded successfully.`,
+      <div id="content-wrapper" className="flex justify-center flex-col h-screen">
+        <div className="flex justify-center space-x-4 py-3 px-3 bg-slate-700">
+          <SearchBar
+            onSearch={(val) =>
+              void handleNodeSearch({
+                id: val,
+                fusekiObjectType: val.includes("://") ? "uri" : "literal",
+                label: val,
               })
             }
           />
+          <Button onClick={() => setEditorDrawerOpen(true)}>
+            Write SPARQL Query
+          </Button>
         </div>
-        <main className="h-full flex-shrink flex-grow">
-          <NetworkGraph
-            theme={darkTheme}
-            labelType="all"
-            nodes={nodes}
-            edges={edges}
-            onNodeClick={(networkNode) => handleNodeClicked(networkNode.data)}
-          />
-        </main>
+        <div className="flex h-full items-start bg-slate-500">
+          <div className="w-72 bg-slate-200 pb-2 px-2 py-2">
+            <FileUploadDragger
+              datasetName={datasetName}
+              onSuccess={() =>
+                void messageApi.open({
+                  type: "success",
+                  content: `File uploaded successfully.`,
+                })
+              }
+              onError={() =>
+                void messageApi.open({
+                  type: "error",
+                  content: `File uploaded successfully.`,
+                })
+              }
+            />
+          </div>
+          <main className="h-full flex-shrink flex-grow">
+            <NetworkGraph
+              // theme={darkTheme}
+              // draggable
+              // Note: We might want to use this for the sharing part, but for now it causes weird issues, so no dragging during construction. - Satsuki
+              labelType="all"
+              nodes={nodes}
+              edges={edges}
+              onNodeClick={(networkNode) => handleNodeClicked(networkNode.data)}
+            />
+          </main>
+        </div>
       </div>
     </>
   );
@@ -249,7 +253,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [searchVal, setSearchValue] = useState("");
 
   return (
-    <div id="search-bar">
+    <div className = "grow" id="search-bar">
       <Input.Search
         value={searchVal}
         onChange={(e) => setSearchValue(e.target.value)}
