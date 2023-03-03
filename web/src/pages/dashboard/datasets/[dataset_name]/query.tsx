@@ -1,6 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
 import { withAuth } from "../../../../client/hoc/withAuth";
-import { fusekiClient } from "../../../../utils/fuseki";
 import type {
   FusekiQueryResult,
   FusekiQueryBinding,
@@ -16,6 +14,7 @@ import { message, Upload } from "antd";
 import { useSparqlEditorStore } from "../../../../client/store/editor";
 import { NetworkGraph } from "../../../../client/components/NetworkGraph";
 import { useGraphStore } from "../../../../client/store/graph";
+import { api } from "../../../../utils/api"
 import type { GraphNode } from "../../../../client/store/graph";
 
 const { Dragger } = Upload;
@@ -26,55 +25,36 @@ function QueryPage() {
   const router = useRouter();
   const { nodes, edges, setStartNode, addFusekiExpansionQueryResult } =
     useGraphStore();
-  const queryMutation = useMutation({
-    mutationFn: fusekiClient.queryDataset,
-    onFailure: () =>
-      messageApi.open({ type: "error", content: "Something went wrong!" }),
-  });
-
   const datasetName = router.query["dataset_name"] as string;
-  function handleSendQuery(query: string) {
-    if (typeof datasetName !== "string") {
-      return;
-    }
-    queryMutation.mutate({ datasetName, query });
-  }
+
+  const queryMutation = api.fuseki.queryDataset.useMutation();
+  const expansionQueryMutation = api.fuseki.expansionQueryDataset.useMutation();
 
   async function handleNodeSearch(node: GraphNode) {
-    const expansionQueryResult = await fusekiClient.expansionQueryDataset({
-      datasetName,
-      expansionNode: node,
-    });
+    const result = await expansionQueryMutation.mutateAsync({datasetName: datasetName, expansionNode: node});
 
-    if (!expansionQueryResult.results.bindings.length) {
-      await messageApi.open({
-        type: "error",
-        content: `Either not a node or has no neighbors`,
-      });
+    if (!result.results.bindings.length) {
+      await messageApi.open({ type: "error", content: `Either not a node or has no neighbors`, });
       return;
     }
-
     setStartNode(node);
     setEditorDrawerOpen(false);
   }
 
-  async function handleNodeClicked(node: GraphNode) {
-    const expansionQueryResult = await fusekiClient.expansionQueryDataset({
-      datasetName,
-      expansionNode: node,
-    });
 
-    if (!expansionQueryResult.results.bindings.length) {
-      await messageApi.open({
-        type: "error",
-        content: `No expansions possible`,
-      });
+
+  async function handleNodeClicked(node: GraphNode) {
+    const result = await expansionQueryMutation.mutateAsync({datasetName: datasetName, expansionNode: node});
+
+    if (!result.results.bindings.length) {
+      await messageApi.open({ type: "error", content: 'No expansions possible!', });
       return;
     }
-
-    addFusekiExpansionQueryResult(expansionQueryResult);
+    addFusekiExpansionQueryResult(result);
     setEditorDrawerOpen(false);
   }
+
+
 
   return (
     <>
@@ -82,7 +62,7 @@ function QueryPage() {
       <EditorDrawer
         open={editorDrawerOpen}
         onClose={() => setEditorDrawerOpen(false)}
-        onSubmit={handleSendQuery}
+        onSubmit={(query: string) => queryMutation.mutateAsync({ datasetName, query })}
         loading={queryMutation.isLoading}
         queryResults={queryMutation.data}
         onNodeSearch={handleNodeSearch}
@@ -222,11 +202,13 @@ const FileUploadDragger: React.FC<FileUploadDraggerProps> = ({
   onSuccess,
   onError,
 }) => {
+  const getUploadUrlQuery = api.fuseki.getUploadUrl.useQuery({datasetName});
+
   return (
     <Dragger
       name="file"
       multiple
-      action={fusekiClient.getFusekiUploadUrl(datasetName)}
+      action={getUploadUrlQuery.data}
       onChange={(info) => {
         const { status } = info.file;
         if (status !== "uploading") {
