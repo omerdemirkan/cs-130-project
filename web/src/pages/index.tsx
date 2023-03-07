@@ -9,7 +9,6 @@ const Home: NextPage = () => {
   return (
     <main>
       <AuthShowcase />
-      {/* <ProcedureTest /> */}
     </main>
   );
 };
@@ -22,12 +21,12 @@ export default Home;
  * Test component which checks if Fuseki is online.
  * @see exampleRouter$getFusekiServerStatus
  */
-const ProcedureTest: React.FC = () => {
+export const ProcedureTest: React.FC = () => {
   {/* BELOW IS OUR TESTING EXAMPLE */}
   const status = api.fuseki.getStatus.useQuery()
   const getStats = api.fuseki.getDatasetStats.useQuery({datasetName: 'my_dataset'})
-  const query = api.fuseki.queryDataset.useQuery({datasetName: 'my_dataset', query: 
-      'SELECT ?subject ?predicate ?object\nWHERE {\n   ?subject ?predicate ?object .\n}'})
+  const query = api.fuseki.queryDataset.useMutation()
+  const graphSave = api.prisma.saveGraph.useMutation()
   const createDataset = api.fuseki.createDataset.useMutation()
   const uploadData = api.fuseki.uploadData.useMutation()
 
@@ -70,7 +69,8 @@ const ProcedureTest: React.FC = () => {
       
       <div><button
           onClick={ () => {
-            void console.log(query.data)
+            void console.log(query.mutateAsync({datasetName: 'my_dataset', query: 
+            'SELECT ?subject ?predicate ?object\nWHERE {\n   ?subject ?predicate ?object .\n}'}))
           }}
         > 
         {"Click me to query the dataset!"}
@@ -83,6 +83,7 @@ const ProcedureTest: React.FC = () => {
     </div>
   )
 };
+
 
 
 const AuthShowcase: React.FC = () => {

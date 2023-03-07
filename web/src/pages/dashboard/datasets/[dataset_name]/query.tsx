@@ -16,6 +16,7 @@ import { NetworkGraph } from "../../../../client/components/NetworkGraph";
 import { useGraphStore } from "../../../../client/store/graph";
 import { api } from "../../../../utils/api"
 import type { GraphNode } from "../../../../client/store/graph";
+import { ProcedureTest } from "../../..";
 
 const { Dragger } = Upload;
 
@@ -29,6 +30,8 @@ function QueryPage() {
 
   const queryMutation = api.fuseki.queryDataset.useMutation();
   const expansionQueryMutation = api.fuseki.expansionQueryDataset.useMutation();
+  const saveGraph = api.prisma.saveGraph.useMutation()
+  const readGraph = api.prisma.readGraph.useMutation()
 
   async function handleNodeSearch(node: GraphNode) {
     const result = await expansionQueryMutation.mutateAsync({datasetName: datasetName, expansionNode: node});
@@ -52,6 +55,10 @@ function QueryPage() {
     }
     addFusekiExpansionQueryResult(result);
     setEditorDrawerOpen(false);
+
+    await saveGraph.mutateAsync({nodes: nodes, edges: edges});
+    await readGraph.mutateAsync()
+    await messageApi.open({ type: "error", content: readGraph.data?.graphContents });
   }
 
 
@@ -80,6 +87,9 @@ function QueryPage() {
         <Button onClick={() => setEditorDrawerOpen(true)}>
           Write SPARQL Query
         </Button>
+      </div>
+      <div className="flex justify-center">
+        <ProcedureTest />
       </div>
       <div className="flex h-screen items-start gap-4">
         <div className="w-72">
