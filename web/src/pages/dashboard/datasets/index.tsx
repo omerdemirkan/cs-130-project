@@ -12,6 +12,7 @@ const DashboardPage: React.FC = () => {
 
   const serverDataQuery = api.fuseki.getServerData.useQuery();
   const createDatasetMutation = api.fuseki.createDataset.useMutation();
+  const deleteDatasetMutation = api.fuseki.deleteDataset.useMutation();
 
   async function createDataset(datasetName: string) {
       await createDatasetMutation.mutateAsync({ datasetName });
@@ -20,11 +21,17 @@ const DashboardPage: React.FC = () => {
       setCreateDatasetModalOpen(false);
   }
 
+  async function deleteDataset(datasetName: string) {
+    await deleteDatasetMutation.mutateAsync({ datasetName });
+    // await router.push(`/dashboard/datasets/${datasetName}/query`);
+    serverDataQuery.refetch();
+  }
+
   const router = useRouter();
 
   return (
     <div>
-      <p>{sessionData && <span>Logged in as {sessionData.user?.name}</span>}</p>
+      <p className='content-end'>{sessionData && <span>Logged in as {sessionData.user?.name}</span>}</p>
       <Button onClick={() => setCreateDatasetModalOpen(true)}>
         Create new dataset
       </Button>
@@ -39,16 +46,19 @@ const DashboardPage: React.FC = () => {
       ) : null}
       {!!serverDataQuery.data && serverDataQuery.isLoading ? <p>Datasets are loading</p> : null}
       {serverDataQuery.data?.datasets?.length ? (
-        <div>
+        <div id="dataset-list" className="flex flex-row space-x-4">
           {serverDataQuery.data.datasets.map((dataset) => (
-            <div key={dataset["ds.name"]}>
+            <div className='basis-1/3' key={dataset["ds.name"]}>
               <p>Dataset Name: {dataset["ds.name"]}</p>
               <Link
                 href="/dashboard/datasets/[dataset_name]/query"
                 as={`/dashboard/datasets${dataset["ds.name"]}/query`}
               >
-                <button>Query</button>
+                <Button>Query</Button>
               </Link>
+              <Button onClick={() => deleteDataset(dataset["ds.name"])}>
+                Delete
+              </Button>
               <hr />
             </div>
           ))}
@@ -92,7 +102,7 @@ const CreateDatasetModal: React.FC<CreateDatasetModalProps> = ({
       >
         <p>We'll first need to create a dataset to hold our .ttl files!</p>
         <Input
-          placeholder="E.g us-flight-paths"
+          placeholder="e.g us-flight-paths"
           value={datasetName}
           onChange={(e) =>
             setDatasetName(e.target.value.replace(" ", "-").toLowerCase())
