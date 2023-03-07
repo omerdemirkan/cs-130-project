@@ -75,22 +75,24 @@ function QueryPage() {
         onNodeSearch={handleNodeSearch}
       />
       <div id="content-wrapper" className="flex justify-center flex-col h-screen">
-        <div className="flex justify-center space-x-4 py-3 px-3 bg-slate-700">
-          <SearchBar
-            onSearch={(val) =>
-              void handleNodeSearch({
-                id: val,
-                fusekiObjectType: val.includes("://") ? "uri" : "literal",
-                label: val,
-              })
-            }
-          />
+        <div id="graph-header" className="flex justify-center space-x-4 py-3 px-3 bg-slate-700">
+          <div id="search-bar" className="w-2/3">
+            <SearchBar
+              onSearch={(val) =>
+                void handleNodeSearch({
+                  id: val,
+                  fusekiObjectType: val.includes("://") ? "uri" : "literal",
+                  label: val,
+                })
+              }
+            />
+          </div>
           <Button onClick={() => setEditorDrawerOpen(true)}>
               Write SPARQL Query
           </Button>
         </div>
         <div className="flex justify-center">
-          {/*<ProcedureTest/> Commenting this out for now to test visual things */} 
+          {/*<ProcedureTest/> Commenting this out for now to test visual things*/} 
         </div>
         <div className="flex h-full items-start bg-slate-500">
           <div className="w-72 bg-slate-200 pb-2 px-2 py-2">
