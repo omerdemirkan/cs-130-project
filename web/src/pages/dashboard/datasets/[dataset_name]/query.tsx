@@ -11,7 +11,6 @@ import { useRouter } from "next/router";
 import { InboxOutlined } from "@ant-design/icons";
 import { Button, Drawer, Input, Space, Table, Tooltip } from "antd";
 import { message, Upload } from "antd";
-// import { darkTheme } from "reagraph";
 import { useSparqlEditorStore } from "../../../../client/store/editor";
 import { NetworkGraph } from "../../../../client/components/NetworkGraph";
 import { useGraphStore } from "../../../../client/store/graph";
@@ -83,36 +82,15 @@ function QueryPage() {
                 id: val,
                 fusekiObjectType: val.includes("://") ? "uri" : "literal",
                 label: val,
-            })
-          }
-        />
-        <Button onClick={() => setEditorDrawerOpen(true)}>
-          Write SPARQL Query
-        </Button>
-      </div>
-      <div className="flex justify-center">
-        <ProcedureTest />
-      </div>
-      <div className="flex h-screen items-start gap-4">
-        <div className="w-72">
-          <FileUploadDragger
-            datasetName={datasetName}
-            onSuccess={() =>
-              void messageApi.open({
-                type: "success",
-                content: `File uploaded successfully.`,
-              })
-            }
-            onError={() =>
-              void messageApi.open({
-                type: "error",
-                content: `File uploaded successfully.`,
               })
             }
           />
           <Button onClick={() => setEditorDrawerOpen(true)}>
-            Write SPARQL Query
+              Write SPARQL Query
           </Button>
+        </div>
+        <div className="flex justify-center">
+          {/*<ProcedureTest/> Commenting this out for now to test visual things */} 
         </div>
         <div className="flex h-full items-start bg-slate-500">
           <div className="w-72 bg-slate-200 pb-2 px-2 py-2">
@@ -284,7 +262,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [searchVal, setSearchValue] = useState("");
 
   return (
-    <div className = "grow" id="search-bar">
+    <div>
       <Input.Search
         value={searchVal}
         onChange={(e) => setSearchValue(e.target.value)}
