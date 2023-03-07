@@ -9,6 +9,7 @@ import { api } from "../../../utils/api";
 const DashboardPage: React.FC = () => {
   const { data: sessionData } = useSession();
   const [createDatasetModalOpen, setCreateDatasetModalOpen] = useState(false);
+  const [deleteDatasetModalOpen, setDeleteDatasetModalOpen] = useState(false);
 
   const serverDataQuery = api.fuseki.getServerData.useQuery();
   const createDatasetMutation = api.fuseki.createDataset.useMutation();
@@ -23,47 +24,55 @@ const DashboardPage: React.FC = () => {
 
   async function deleteDataset(datasetName: string) {
     await deleteDatasetMutation.mutateAsync({ datasetName });
-    // await router.push(`/dashboard/datasets/${datasetName}/query`);
     serverDataQuery.refetch();
   }
 
   const router = useRouter();
 
   return (
-    <div>
-      <p className='content-end'>{sessionData && <span>Logged in as {sessionData.user?.name}</span>}</p>
-      <Button onClick={() => setCreateDatasetModalOpen(true)}>
-        Create new dataset
-      </Button>
+    <div id="content-wrapper" className="flex h-screen flex-col">
       <CreateDatasetModal
         open={createDatasetModalOpen}
         onClose={() => setCreateDatasetModalOpen(false)}
         onSubmit={createDataset}
         loading={createDatasetMutation.isLoading}
       />
-      {serverDataQuery.data?.datasets?.length === 0 ? (
-        <p>Hmm, looks like you don&apos;t have any datasets</p>
-      ) : null}
-      {!!serverDataQuery.data && serverDataQuery.isLoading ? <p>Datasets are loading</p> : null}
-      {serverDataQuery.data?.datasets?.length ? (
-        <div id="dataset-list" className="flex flex-row space-x-4">
-          {serverDataQuery.data.datasets.map((dataset) => (
-            <div className='basis-1/3' key={dataset["ds.name"]}>
-              <p>Dataset Name: {dataset["ds.name"]}</p>
-              <Link
-                href="/dashboard/datasets/[dataset_name]/query"
-                as={`/dashboard/datasets${dataset["ds.name"]}/query`}
-              >
-                <Button>Query</Button>
-              </Link>
-              <Button onClick={() => deleteDataset(dataset["ds.name"])}>
-                Delete
-              </Button>
-              <hr />
-            </div>
-          ))}
+      <div id="dashboard-header" className="w-screen bg-slate-200">
+        <p className='text-end mx-4'>{sessionData && <span>Logged in as <a href={"https://github.com/"+sessionData.user?.name}>{sessionData.user?.name}</a></span>}</p>
+      </div>
+      <div id="database-field" className="bg-slate-600 h-screen w-screen">
+        <h1 className="text-slate-50 ml-5">Datasets</h1>
+        <div id="create-dataset-button" className="mb-5 ml-5">
+          <Button onClick={() => setCreateDatasetModalOpen(true)}>
+            Create new dataset
+          </Button>
         </div>
-      ) : null}
+        {serverDataQuery.data?.datasets?.length === 0 ? (
+          <p>Hmm, looks like you don&apos;t have any datasets</p>
+        ) : null}
+        {!!serverDataQuery.data && serverDataQuery.isLoading ? <p>Datasets are loading</p> : null}
+        {serverDataQuery.data?.datasets?.length ? (
+          <div id="dataset-list" className="flex flex-row flex-wrap ml-5">
+            {serverDataQuery.data.datasets.map((dataset) => (
+              <div className='basis-1/4 mr-4 mb-4 bg-slate-300' key={dataset["ds.name"]}>
+                <p className='ml-4'>Dataset Name: {dataset["ds.name"]}</p>
+                <div className="datasetButtons ml-4">
+                  <Link
+                    href="/dashboard/datasets/[dataset_name]/query"
+                    as={`/dashboard/datasets${dataset["ds.name"]}/query`}
+                  >
+                    <Button>Query</Button>
+                  </Link>
+                  <Button onClick={() => deleteDataset(dataset["ds.name"])}>
+                    Delete
+                  </Button>
+                </div>
+                <hr/>
+              </div>
+            ))}
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 };
@@ -111,6 +120,14 @@ const CreateDatasetModal: React.FC<CreateDatasetModalProps> = ({
       </Modal>
     </>
   );
+};
+
+type DelteDatasetModalProps = {
+  datasetToDelete : string;
+  onSubmit(): void | Promise<void>;
+  open: boolean;
+  onClose(): void;
+  loading: boolean;
 };
 
 export default withAuth(DashboardPage);
