@@ -140,7 +140,7 @@ type EditorDrawerProps = {
   onNodeSearch?(node: GraphNode): void | Promise<void>;
 };
 
-const EditorDrawer: React.FC<EditorDrawerProps> = ({
+export const EditorDrawer: React.FC<EditorDrawerProps> = ({
   open,
   onClose,
   onSubmit,
