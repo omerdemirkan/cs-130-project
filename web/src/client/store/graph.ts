@@ -48,7 +48,7 @@ export const useGraphStore = create<GraphStoreState>()((set, get) => ({
   },
 }));
 
-function processFusekiExpansionQueryResults({
+export function processFusekiExpansionQueryResults({
   fusekiQueryResult,
   existingNodes = [],
   existingEdges = [],

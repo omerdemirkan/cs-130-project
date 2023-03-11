@@ -84,7 +84,7 @@ type CreateDatasetModalProps = {
   loading: boolean;
 };
 
-const CreateDatasetModal: React.FC<CreateDatasetModalProps> = ({
+export const CreateDatasetModal: React.FC<CreateDatasetModalProps> = ({
   onSubmit,
   open,
   onClose,
@@ -114,7 +114,7 @@ const CreateDatasetModal: React.FC<CreateDatasetModalProps> = ({
           placeholder="e.g us-flight-paths"
           value={datasetName}
           onChange={(e) =>
-            setDatasetName(e.target.value.replace(" ", "-").toLowerCase())
+            setDatasetName(e.target.value.replaceAll(" ", "-").toLowerCase())
           }
         />
       </Modal>
