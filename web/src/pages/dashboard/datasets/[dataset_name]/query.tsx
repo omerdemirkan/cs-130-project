@@ -260,7 +260,7 @@ type SearchBarProps = {
   onSearch(searchStr: string): void;
 };
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
+export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [searchVal, setSearchValue] = useState("");
 
   return (
