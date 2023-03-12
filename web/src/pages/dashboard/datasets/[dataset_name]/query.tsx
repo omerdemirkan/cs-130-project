@@ -29,8 +29,7 @@ function QueryPage() {
 
   const queryMutation = api.fuseki.queryDataset.useMutation();
   const expansionQueryMutation = api.fuseki.expansionQueryDataset.useMutation();
-  const saveGraph = api.prisma.saveGraph.useMutation()
-  const readGraph = api.prisma.readGraph.useMutation()
+  const saveGraph = api.prisma.saveGraph.useMutation();
 
   async function handleNodeSearch(node: GraphNode) {
     const result = await expansionQueryMutation.mutateAsync({datasetName: datasetName, expansionNode: node});
@@ -54,13 +53,8 @@ function QueryPage() {
     }
     addFusekiExpansionQueryResult(result);
     setEditorDrawerOpen(false);
-
-    await saveGraph.mutateAsync({nodes: nodes, edges: edges});
-    await readGraph.mutateAsync()
-    await messageApi.open({ type: "error", content: readGraph.data?.graphContents });
+    
   }
-
-
 
   return (
     <>
@@ -92,6 +86,9 @@ function QueryPage() {
         </div>
         <div className="flex justify-center">
           {/*<ProcedureTest/> Commenting this out for now to test visual things*/} 
+        </div>
+        <div className="flex justify-center">
+          <Button onClick={() => saveGraph.mutateAsync({nodes: nodes, edges: edges})}>Save graph</Button>
         </div>
         <div className="flex h-full items-start bg-slate-500">
           <div className="w-72 bg-slate-200 pb-2 px-2 py-2">
