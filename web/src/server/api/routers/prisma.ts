@@ -21,10 +21,10 @@ export const prismaRouter = createTRPCRouter({
       });
     }),
 
-  /**
-   * Retrieves a graph from the Prisma backend.
-   */
-  readGraph: publicProcedure.mutation(({ ctx }) => {
-    return ctx.prisma.graph.findFirst();
-  }),
+    readGraph: publicProcedure
+        .input(z.object({ graphId: z.string() }))
+        .mutation(({ ctx, input }) => {
+            console.log(input);
+            return ctx.prisma.graph.findUnique({where: { id: input.graphId, },});
+        })
 });

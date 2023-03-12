@@ -51,7 +51,7 @@ export const useGraphStore = create<GraphStoreState>()((set, get) => ({
     set({
       nodes: newNodes,
       edges: newEdges,
-    });
+    }); // TO-DO: can try to make new function? basically tryna process this query result
   },
 
   setStartNode(startNode) {
