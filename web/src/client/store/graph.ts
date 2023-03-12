@@ -1,3 +1,6 @@
+/**
+ * @module web/client
+ */
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type {
@@ -8,6 +11,7 @@ import type {
 /**
  * Type representing a graph node. It includes an associated identifier,
  * label, and turtle triple.
+ * @category Components
  */
 export type GraphNode = {
   id: string;
@@ -18,6 +22,7 @@ export type GraphNode = {
 /**
  * Type representing a graph edge. It includes the source node,
  * target node, an associated identifer, and a label.
+ * @category Components
  */
 export type GraphEdge = {
   source: string;
@@ -37,6 +42,7 @@ type GraphStoreState = {
 
 /**
  * @returns A GraphStoreState hook containing no nodes or edges.
+ * @category Components
  */
 export const useGraphStore = create<GraphStoreState>()((set, get) => ({
   nodes: [],
@@ -62,6 +68,7 @@ export const useGraphStore = create<GraphStoreState>()((set, get) => ({
 /**
  * Takes an {@code FusekiExpansionQueryResults} and adds it to specified
  * existing nodes and branches.
+ * @category Components
  */
 export function processFusekiExpansionQueryResults({
   fusekiQueryResult,

@@ -1,3 +1,6 @@
+/**
+ * @module web/client
+ */
 import dynamic from "next/dynamic";
 
 const GraphCanvas = dynamic(
@@ -12,6 +15,7 @@ const GraphCanvas = dynamic(
 
 /**
  * A component representing a graph visualization.
+ * @category Components
  */
 export const NetworkGraph: React.FC<
   React.ComponentProps<typeof GraphCanvas>

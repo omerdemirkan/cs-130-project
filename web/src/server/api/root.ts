@@ -1,3 +1,6 @@
+/**
+ * @module web/server
+ */
 import { createTRPCRouter } from "./trpc";
 import { fusekiRouter } from "./routers/fuseki";
 import { prismaRouter } from "./routers/prisma";
