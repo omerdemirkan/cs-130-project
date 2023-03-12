@@ -1,13 +1,7 @@
 import { withAuth } from "../../../../client/hoc/withAuth";
-import { useState } from "react";
 import { useRouter } from "next/router";
-
-import { Input } from "antd";
-import { message, Upload } from "antd";
 import { NetworkGraph } from "../../../../client/components/NetworkGraph";
-import { useGraphStore } from "../../../../client/store/graph";
 import { api } from "../../../../utils/api";
-import type { GraphNode } from "../../../../client/store/graph";
 
 function ReadPage() {
   const router = useRouter();
