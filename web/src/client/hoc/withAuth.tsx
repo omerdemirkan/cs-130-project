@@ -2,8 +2,13 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-export function withAuth(WithoutAuthComponent: React.FC<T>): React.FC<T> {
-  const WithAuthComponent: React.FC<T> = (props) => {
+/**
+ * Authentication Compoentn!
+ * @param WithoutAuthComponent 
+ * @returns 
+ */
+export function withAuth(WithoutAuthComponent: React.FC): React.FC {
+  const WithAuthComponent: React.FC = (props) => {
     const { status } = useSession();
     const router = useRouter();
     useEffect(() => {

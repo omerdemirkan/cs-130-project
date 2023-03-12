@@ -3,24 +3,24 @@
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
+ * (the 'License'); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed on an 'AS IS' BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import axios, { isAxiosError } from "axios";
-import qs from "qs";
-import { GraphNode } from "../client/store/graph";
+import axios, { isAxiosError } from 'axios';
+import qs from 'qs';
+import { GraphNode } from '../client/store/graph';
 
-const DATASET_SIZE_QUERY_1 = "select (count(*) as ?count) {?s ?p ?o}";
+const DATASET_SIZE_QUERY_1 = 'select (count(*) as ?count) {?s ?p ?o}';
 const DATASET_SIZE_QUERY_2 =
-    "select ?g (count(*) as ?count) {graph ?g {?s ?p ?o}} group by ?g";
+    'select ?g (count(*) as ?count) {graph ?g {?s ?p ?o}} group by ?g';
 
 export class FusekiService {
     isOffline: boolean;
@@ -35,10 +35,10 @@ export class FusekiService {
     getFusekiUrl = (url: string) => {
         // remove leading `/`'s
         let normalizedUrl = url;
-        while (normalizedUrl.startsWith("/") && normalizedUrl.length > 0) {
+        while (normalizedUrl.startsWith('/') && normalizedUrl.length > 0) {
             normalizedUrl = normalizedUrl.slice(1);
         }
-        const pathname = this.pathname.endsWith("/") ?
+        const pathname = this.pathname.endsWith('/') ?
             this.pathname :
             `${this.pathname}/`;
         return `${pathname}${normalizedUrl}`;
@@ -53,7 +53,7 @@ export class FusekiService {
 
 
     getServerData = async (): Promise < GetServerDataResponse > => {
-        const response = await axios.get(this.getFusekiUrl("/$/server"));
+        const response = await axios.get(this.getFusekiUrl('/$/server'));
         return response.data as GetServerDataResponse;
     };
 
@@ -61,7 +61,7 @@ export class FusekiService {
 
     getServerStatus = async () => {
         try {
-            await axios.get(this.getFusekiUrl("/$/ping"));
+            await axios.get(this.getFusekiUrl('/$/ping'));
 
             this.isOffline = false;
             return true;
@@ -90,17 +90,12 @@ export class FusekiService {
         datasetName: string;
         query: string;
     }) => {
-        if (datasetName.includes("/")) {
-            datasetName = datasetName.remove("/");
-        }
+        if (datasetName.includes('/'))
+            datasetName = datasetName.replace('/', '');
 
-        const {
-            data
-        } = await axios.get(
+        const { data } = await axios.get(
             this.getFusekiUrl(`/${datasetName}/query`), {
-                params: {
-                    query
-                }
+                params: { query }
             }
         );
         return data as FusekiQueryResult;
@@ -142,9 +137,7 @@ export class FusekiService {
         });
 
         const expansionQueryResult: FusekiExpansionQueryResults = {
-            head: {
-                vars: ["subject", "predicate", "object"],
-            },
+            head: { vars: ['subject', 'predicate', 'object'] },
             results: {
                 // @ts-ignore
                 bindings: [
@@ -171,16 +164,14 @@ export class FusekiService {
 
 
     private getNodeQueryStrRepresentation = (expansionNode: GraphNode) => {
-        if (expansionNode.fusekiObjectType === "uri") {
+        if (expansionNode.fusekiObjectType === 'uri')
             return `<${expansionNode.id}>`;
-        }
 
-        const isNumericStr = !isNaN(expansionNode.id);
-        if (isNumericStr) {
+        const isNumericStr = !isNaN((+expansionNode.id));
+        if (isNumericStr)
             return expansionNode.id;
-        }
 
-        return `"${expansionNode.id}"`;
+        return `'${expansionNode.id}'`;
     };
 
 
@@ -211,12 +202,12 @@ export class FusekiService {
             }),
         ]);
 
-        const results = {};
+        const results: any = {};
         const defaultGraphResult = promisesResult[0];
-        results["default graph"] =
-            defaultGraphResult.data.results.bindings[0].count.value;
+        results['default graph'] = defaultGraphResult.data.results.bindings[0].count.value;
+        
         const allGraphResult = promisesResult[1];
-        allGraphResult.data.results.bindings.forEach((binding) => {
+        allGraphResult.data.results.bindings.forEach((binding: any) => {
             results[binding.g.value] = binding.count.value;
         });
         return results;
@@ -241,7 +232,7 @@ export class FusekiService {
         datasetType,
     }: {
         datasetName: string;
-        datasetType: "tdb2" | "mem";
+        datasetType: 'tdb2' | 'mem';
     }) => {
         const data = qs.stringify({
             dbName: datasetName,
@@ -251,10 +242,10 @@ export class FusekiService {
         // data.set('dbName', datasetName)
         // data.set('dbType', datasetType)
         const headers = {
-            "Content-Type": "application/x-www-form-urlencoded",
+            'Content-Type': 'application/x-www-form-urlencoded',
         };
         try {
-            await axios.post(this.getFusekiUrl("/$/datasets"), data, {
+            await axios.post(this.getFusekiUrl('/$/datasets'), data, {
                 headers,
             });
         }
@@ -263,11 +254,11 @@ export class FusekiService {
                 if (error.response.status !== 200) {
                     if (error.response.status === 409) {
                         throw new Error(
-                            `failed to create dataset "${datasetName}", reason: there is another dataset with the same name`
+                            `failed to create dataset '${datasetName}', reason: there is another dataset with the same name`
                         );
                     }
                     throw new Error(
-                        `failed to create dataset "${datasetName}" with type ${datasetType}, reason: HTTP status: "${error.response.status}", message: ${error.response.statusText}`
+                        `failed to create dataset '${datasetName}' with type ${datasetType}, reason: HTTP status: '${error.response.status}', message: ${error.response.statusText}`
                     );
                 }
             }
@@ -278,7 +269,7 @@ export class FusekiService {
 
 
     getTasks() {
-        return axios.get(this.getFusekiUrl("/$/tasks"));
+        return axios.get(this.getFusekiUrl('/$/tasks'));
     }
 
 
@@ -296,11 +287,11 @@ export class FusekiService {
                 },
             }),
         ]);
-        const results = {};
+        const results: any = {};
         const defaultGraphResult = promisesResult[0];
         results.default = defaultGraphResult.data.results.bindings[0].count.value;
         const allGraphResult = promisesResult[1];
-        allGraphResult.data.results.bindings.forEach((binding) => {
+        allGraphResult.data.results.bindings.forEach((binding: any) => {
             results[binding.g.value] = binding.count.value;
         });
         return results;
@@ -310,12 +301,8 @@ export class FusekiService {
 
     fetchGraph = async (datasetName: string, graphName: string) => {
         return (await axios.get(this.getFusekiUrl(`/${datasetName}`), {
-            params: {
-                graph: graphName,
-            },
-            headers: {
-                Accept: "text/turtle; charset=utf-8",
-            },
+            params: { graph: graphName, },
+            headers: { Accept: 'text/turtle; charset=utf-8', },
         })).data;
     };
 
@@ -324,12 +311,10 @@ export class FusekiService {
     saveGraph = async (datasetName: string, graphName: string, code: string) => {
         return await axios
             .put(this.getFusekiUrl(`/${datasetName}`), code, {
-                params: {
-                    graph: graphName,
-                },
+                params: { graph: graphName, },
                 headers: {
-                    Accept: "application/json, text/javascript, */*; q=0.01",
-                    "Content-Type": "text/turtle; charset=UTF-8",
+                    Accept: 'application/json, text/javascript, */*; q=0.01',
+                    'Content-Type': 'text/turtle; charset=UTF-8',
                 },
             })
             .catch((error) => {
@@ -347,14 +332,14 @@ interface GetServerDataResponse {
     datasets ? : DatasetsEntity[] | null;
 }
 interface DatasetsEntity {
-    "ds.name": string;
-    "ds.state": boolean;
-    "ds.services" ? : DsServicesEntity[] | null;
+    'ds.name': string;
+    'ds.state': boolean;
+    'ds.services' ? : DsServicesEntity[] | null;
 }
 interface DsServicesEntity {
-    "srv.type": string;
-    "srv.description": string;
-    "srv.endpoints" ? : string[] | null;
+    'srv.type': string;
+    'srv.description': string;
+    'srv.endpoints' ? : string[] | null;
 }
 
 export interface FusekiQueryResult {
@@ -376,7 +361,7 @@ export type FusekiQueryBinding = {
     datatype ? : string;
 };
 
-export type FusekiObjectType = "bnode" | "literal" | "uri";
+export type FusekiObjectType = 'bnode' | 'literal' | 'uri';
 
 export type FusekiExpansionQueryBindings = {
     subject: FusekiQueryBinding;

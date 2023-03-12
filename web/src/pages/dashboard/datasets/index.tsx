@@ -6,6 +6,10 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
 import { api } from "../../../utils/api";
 
+/**
+ * Dashboard page!
+ * @returns 
+ */
 const DashboardPage: React.FC = () => {
   const { data: sessionData } = useSession();
   const [createDatasetModalOpen, setCreateDatasetModalOpen] = useState(false);
