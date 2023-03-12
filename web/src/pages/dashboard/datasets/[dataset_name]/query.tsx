@@ -111,15 +111,26 @@ function QueryPage() {
           <Button onClick={() => setEditorDrawerOpen(true)}>
             Write SPARQL Query
           </Button>
+          <Button onClick={() => saveGraph.mutateAsync({nodes: nodes, edges: edges})}>
+            Share graph
+          </Button>
         </div>
         <div className="flex justify-center">
           {/*<ProcedureTest/> Commenting this out for now to test visual things*/}
         </div>
-        <div className="flex justify-center">
-          <Button onClick={() => saveGraph.mutateAsync({nodes: nodes, edges: edges})}>Share graph</Button>
-        </div>
-        <div className="flex h-full items-start bg-slate-500">
-          <div className="w-72 bg-slate-200 px-2 py-2 pb-2">
+        <div className="relative h-full items-start bg-transparent">
+          <main className="absolute z-1 h-full w-full">
+            <NetworkGraph
+              // theme={darkTheme}
+              // draggable
+              // Note: We might want to use this for the sharing part, but for now it causes weird issues, so no dragging during construction. - Satsuki
+              labelType="all"
+              nodes={nodes}
+              edges={edges}
+              onNodeClick={(networkNode) => handleNodeClicked(networkNode.data)}
+            />
+          </main>
+          <div className="absolute z-2 w-72 bg-slate-200 bg-opacity-90 px-2 py-2 pb-2 m-5 rounded-md">
             <FileUploadDragger
               datasetName={datasetName}
               onSuccess={() =>
@@ -136,17 +147,6 @@ function QueryPage() {
               }
             />
           </div>
-          <main className="h-full flex-shrink flex-grow">
-            <NetworkGraph
-              // theme={darkTheme}
-              // draggable
-              // Note: We might want to use this for the sharing part, but for now it causes weird issues, so no dragging during construction. - Satsuki
-              labelType="all"
-              nodes={nodes}
-              edges={edges}
-              onNodeClick={(networkNode) => handleNodeClicked(networkNode.data)}
-            />
-          </main>
         </div>
       </div>
     </>
