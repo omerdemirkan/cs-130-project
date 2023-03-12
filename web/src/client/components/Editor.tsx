@@ -22,6 +22,9 @@ type EditorProps = {
   value: string;
 };
 
+/**
+ * A component representing the editor for sending SPARQL queries.
+ */
 export const Editor: React.FC<EditorProps> = ({ value, onChange }) => {
   return (
     <AceEditor

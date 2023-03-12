@@ -32,6 +32,9 @@ export class FusekiService {
 
 
 
+    /**
+     * @returns The main URL of the Fuseki server.
+     */
     getFusekiUrl = (url: string) => {
         // remove leading `/`'s
         let normalizedUrl = url;
@@ -46,12 +49,19 @@ export class FusekiService {
 
 
 
+    /**
+     * @param datasetName The name of the target dataset.
+     * @returns The URL for uploading data based on the dataset name.
+     */
     getFusekiUploadUrl = (datasetName: string) => {
         return this.getFusekiUrl(`${datasetName}/data`);
     };
 
 
 
+    /**
+     * @returns The Fuseki server data.
+     */
     getServerData = async (): Promise < GetServerDataResponse > => {
         const response = await axios.get(this.getFusekiUrl('/$/server'));
         return response.data as GetServerDataResponse;
@@ -59,6 +69,9 @@ export class FusekiService {
 
 
 
+    /**
+     * @returns {@code true} if the Fuseki server is online; otherwise, returns {@code false}.
+     */
     getServerStatus = async () => {
         try {
             await axios.get(this.getFusekiUrl('/$/ping'));
@@ -74,6 +87,10 @@ export class FusekiService {
 
 
 
+    /**
+     * @param datasetName The name of the target dataset.
+     * @returns The statistics of the dataset
+     */
     getDatasetStats = async (datasetName: string) => {
         const response = await axios.get(
             this.getFusekiUrl(`/$/stats/${datasetName}`)
@@ -83,6 +100,11 @@ export class FusekiService {
 
 
 
+    /**
+     * @param datasetName The name of the target dataset.
+     * @param query The SPARQL query to use on the dataset.
+     * @returns The result of the query on the dataset.
+     */
     queryDataset = async ({
         datasetName,
         query,
@@ -103,6 +125,13 @@ export class FusekiService {
 
 
 
+    /**
+     * Gets the next expansion of the graph represented by the dataset based on the 
+     * specified node.
+     * @param datasetName The name of the target dataset.
+     * @param expansionNode The node to expand.
+     * @returns A promise containing the expansion results. 
+     */
     expansionQueryDataset = async ({
         datasetName,
         expansionNode,
@@ -188,6 +217,10 @@ export class FusekiService {
 
 
 
+    /**
+     * @param datasetName The name of the target dataset.
+     * @returns The size of the dataset.
+     */
     getDatasetSize = async (datasetName: string, endpoint: string) => {
         const promisesResult = await Promise.all([
             axios.get(this.getFusekiUrl(`/${datasetName}/${endpoint}`), {
@@ -215,18 +248,30 @@ export class FusekiService {
 
 
 
+    /**
+     * Deletes the specified dataset.
+     * @param datasetName The name of the target dataset.
+     */
     deleteDataset = async (datasetName: string) => {
         await axios.delete(this.getFusekiUrl(`/$/datasets${datasetName}`));
     };
 
 
 
+    /**
+     * Backs up the specified dataset.
+     * @param datasetName The name of the target dataset.
+     */
     backupDataset = async (datasetName: string) => {
         return await axios.post(this.getFusekiUrl(`/$/backup${datasetName}`));
     };
 
 
 
+    /**
+     * @param datasetName The name of the target dataset.
+     * @param datasetType Either {@code 'mem'} or {@code 'tdb2'}.
+     */
     createDataset = async ({
         datasetName,
         datasetType,
@@ -268,12 +313,21 @@ export class FusekiService {
 
 
 
+    /**
+     * @returns The current tasks on the Fuseki server.
+     */
     getTasks() {
         return axios.get(this.getFusekiUrl('/$/tasks'));
     }
 
 
 
+    /**
+     * Counts the triples in the graph represented by the dataset.
+     * @param datasetName The name of the target dataset.
+     * @param endpoint The endpoint of the dataset.
+     * @returns A promise for the the amonut of counted graph triples.
+     */
     countGraphsTriples = async (datasetName: string, endpoint: string) => {
         const promisesResult = await Promise.all([
             axios.get(this.getFusekiUrl(`/${datasetName}/${endpoint}`), {
@@ -299,6 +353,11 @@ export class FusekiService {
 
 
 
+    /**
+     * @param datasetName The name of the target dataset.
+     * @param graphName The name of the graph represented by the dataset.
+     * @returns A promise containing the current graph of the dataset.
+     */  
     fetchGraph = async (datasetName: string, graphName: string) => {
         return (await axios.get(this.getFusekiUrl(`/${datasetName}`), {
             params: { graph: graphName, },
@@ -331,11 +390,13 @@ interface GetServerDataResponse {
     uptime: number;
     datasets ? : DatasetsEntity[] | null;
 }
+
 interface DatasetsEntity {
     'ds.name': string;
     'ds.state': boolean;
     'ds.services' ? : DsServicesEntity[] | null;
 }
+
 interface DsServicesEntity {
     'srv.type': string;
     'srv.description': string;

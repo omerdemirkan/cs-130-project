@@ -5,12 +5,20 @@ import type {
   FusekiObjectType,
 } from "../../utils/fuseki";
 
+/**
+ * Type representing a graph node. It includes an associated identifier,
+ * label, and turtle triple.
+ */
 export type GraphNode = {
   id: string;
   label: string;
   fusekiObjectType: FusekiObjectType;
 };
 
+/**
+ * Type representing a graph edge. It includes the source node, 
+ * target node, an associated identifer, and a label.
+ */
 export type GraphEdge = {
   source: string;
   target: string;
@@ -27,6 +35,11 @@ type GraphStoreState = {
   setStartNode(startNode: GraphNode): void;
 };
 
+
+
+/**
+ * @returns A GraphStoreState hook containing no nodes or edges. 
+ */
 export const useGraphStore = create<GraphStoreState>()((set, get) => ({
   nodes: [],
   edges: [],
@@ -48,6 +61,12 @@ export const useGraphStore = create<GraphStoreState>()((set, get) => ({
   },
 }));
 
+
+
+/**
+ * Takes an {@code FusekiExpansionQueryResults} and adds it to specified
+ * existing nodes and branches.
+ */
 export function processFusekiExpansionQueryResults({
   fusekiQueryResult,
   existingNodes = [],

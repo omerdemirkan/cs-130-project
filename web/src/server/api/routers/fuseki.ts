@@ -7,7 +7,7 @@ import { GraphNode } from "../../../client/store/graph";
 const fusekiClient = new FusekiService("http://localhost:3030");
 
 /**
- * FusekiRouter
+ * Wrapper for FusekiService containing tRPC procedures related to Fuseki operations. 
  */
 export const fusekiRouter = createTRPCRouter({
     /**

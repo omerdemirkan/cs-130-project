@@ -3,6 +3,11 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { GraphNode, GraphEdge } from "../../../client/store/graph"
 
 export const prismaRouter = createTRPCRouter({
+    /**
+     * Saves and pushes a graph to the Prisma backend as a JSON string.
+     * @param nodes The nodes of the graph.
+     * @param edges The edges of the graph.
+     */
     saveGraph: publicProcedure
         .input(z.object({ nodes: z.array(z.any()), edges: z.array(z.any()) }))
         .mutation(({ ctx, input }) => {
@@ -16,6 +21,11 @@ export const prismaRouter = createTRPCRouter({
             });
         }),
 
+
+
+    /**
+     * Retrieves a graph from the Prisma backend.
+     */
     readGraph: publicProcedure
         .mutation(({ ctx }) => {
             return ctx.prisma.graph.findFirst();

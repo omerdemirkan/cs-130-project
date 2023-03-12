@@ -19,6 +19,11 @@ import type { GraphNode } from "../../../../client/store/graph";
 
 const { Dragger } = Upload;
 
+/**
+ * A component representing the graph visualization page. It contains a search bar
+ * for making dataset searches, a field for uploading .ttl files to amend the dataset,
+ * a modal for making SPARQL searches, and the graph vizualizer itself.
+ */
 function QueryPage() {
   const [messageApi, messageContextHolder] = message.useMessage();
   const [editorDrawerOpen, setEditorDrawerOpen] = useState(false);
@@ -130,6 +135,8 @@ function QueryPage() {
 
 export default withAuth(QueryPage);
 
+
+
 type EditorDrawerProps = {
   open: boolean;
   onClose(): void;
@@ -139,6 +146,11 @@ type EditorDrawerProps = {
   onNodeSearch?(node: GraphNode): void | Promise<void>;
 };
 
+/**
+ * A component representing a modal which has an input field for sending SPARQL queries
+ * into the currently loaded dataset. When submitted the modal will display the result
+ * in a table.
+ */
 export const EditorDrawer: React.FC<EditorDrawerProps> = ({
   open,
   onClose,
@@ -208,13 +220,19 @@ export const EditorDrawer: React.FC<EditorDrawerProps> = ({
   );
 };
 
+
+
 type FileUploadDraggerProps = {
   datasetName: string;
   onSuccess(): void;
   onError(): void;
 };
 
-const FileUploadDragger: React.FC<FileUploadDraggerProps> = ({
+/**
+ * A component representing an area which .ttl files can be dragged onto to upload
+ * to the current dataset.
+ */
+export const FileUploadDragger: React.FC<FileUploadDraggerProps> = ({
   datasetName,
   onSuccess,
   onError,
@@ -255,10 +273,15 @@ const FileUploadDragger: React.FC<FileUploadDraggerProps> = ({
   );
 };
 
+
+
 type SearchBarProps = {
   onSearch(searchStr: string): void;
 };
 
+/**
+ * A component representing a search bar.
+ */
 export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [searchVal, setSearchValue] = useState("");
 

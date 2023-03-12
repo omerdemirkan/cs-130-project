@@ -3,9 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 /**
- * Authentication Compoentn!
- * @param WithoutAuthComponent 
- * @returns 
+ * A component representing the status of an authentication request.
  */
 export function withAuth(WithoutAuthComponent: React.FC): React.FC {
   const WithAuthComponent: React.FC = (props) => {
