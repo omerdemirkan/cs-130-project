@@ -18,8 +18,7 @@ export const prismaRouter = createTRPCRouter({
 
     readGraph: publicProcedure
         .input(z.object({ graphId: z.string() }))
-        .mutation(({ ctx, input }) => {
-            console.log(input);
+        .query(({ ctx, input }) => {
             return ctx.prisma.graph.findUnique({where: { id: input.graphId, },});
         })
 });
