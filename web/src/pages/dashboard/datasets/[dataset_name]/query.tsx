@@ -32,14 +32,24 @@ function QueryPage() {
   const [messageApi, messageContextHolder] = message.useMessage();
   const [editorDrawerOpen, setEditorDrawerOpen] = useState(false);
   const router = useRouter();
-  const { nodes, edges, setStartNode, addFusekiExpansionQueryResult } =
-    useGraphStore();
+  const {
+    nodes,
+    edges,
+    setStartNode,
+    addFusekiExpansionQueryResult,
+    removeNodeById,
+  } = useGraphStore();
   const datasetName = router.query["dataset_name"] as string;
 
   const queryMutation = api.fuseki.queryDataset.useMutation();
   const expansionQueryMutation = api.fuseki.expansionQueryDataset.useMutation();
-  const saveGraph = api.prisma.saveGraph.useMutation();
-  const readGraph = api.prisma.readGraph.useMutation();
+  const saveGraph = api.prisma.saveGraph.useMutation({
+    onSuccess({ id }) {
+      const url = `http://localhost:3000/dashboard/datasets/${datasetName}/${id}`;
+      navigator.clipboard.writeText(url);
+      messageApi.open({ content: "URL copied to clipboard!", type: "success" });
+    },
+  });
 
   async function handleNodeSearch(node: GraphNode) {
     const result = await expansionQueryMutation.mutateAsync({
@@ -73,13 +83,10 @@ function QueryPage() {
     }
     addFusekiExpansionQueryResult(result);
     setEditorDrawerOpen(false);
+  }
 
-    await saveGraph.mutateAsync({ nodes: nodes, edges: edges });
-    await readGraph.mutateAsync();
-    await messageApi.open({
-      type: "error",
-      content: readGraph.data?.graphContents,
-    });
+  function handleNodeRightClicked(node: GraphNode) {
+    removeNodeById(node.id);
   }
 
   return (
@@ -117,12 +124,33 @@ function QueryPage() {
           <Button onClick={() => setEditorDrawerOpen(true)}>
             Write SPARQL Query
           </Button>
+          <Button
+            onClick={() =>
+              saveGraph.mutateAsync({ nodes: nodes, edges: edges })
+            }
+          >
+            Share graph
+          </Button>
         </div>
         <div className="flex justify-center">
           {/*<ProcedureTest/> Commenting this out for now to test visual things*/}
         </div>
-        <div className="flex h-full items-start bg-slate-500">
-          <div className="w-72 bg-slate-200 px-2 py-2 pb-2">
+        <div className="relative h-full items-start bg-transparent">
+          <main className="z-1 absolute h-full w-full">
+            <NetworkGraph
+              // theme={darkTheme}
+              // draggable
+              // Note: We might want to use this for the sharing part, but for now it causes weird issues, so no dragging during construction. - Satsuki
+              labelType="all"
+              nodes={nodes}
+              edges={edges}
+              onNodeClick={(networkNode) => handleNodeClicked(networkNode.data)}
+              onNodeContextMenu={(networkNode) =>
+                handleNodeRightClicked(networkNode.data)
+              }
+            />
+          </main>
+          <div className="z-2 absolute m-5 w-72 rounded-md bg-slate-200 bg-opacity-90 px-2 py-2 pb-2">
             <FileUploadDragger
               datasetName={datasetName}
               onSuccess={() =>
@@ -139,17 +167,6 @@ function QueryPage() {
               }
             />
           </div>
-          <main className="h-full flex-shrink flex-grow">
-            <NetworkGraph
-              // theme={darkTheme}
-              // draggable
-              // Note: We might want to use this for the sharing part, but for now it causes weird issues, so no dragging during construction. - Satsuki
-              labelType="all"
-              nodes={nodes}
-              edges={edges}
-              onNodeClick={(networkNode) => handleNodeClicked(networkNode.data)}
-            />
-          </main>
         </div>
       </div>
     </>
