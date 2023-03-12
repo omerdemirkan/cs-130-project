@@ -16,7 +16,6 @@ import { NetworkGraph } from "../../../../client/components/NetworkGraph";
 import { useGraphStore } from "../../../../client/store/graph";
 import { api } from "../../../../utils/api"
 import type { GraphNode } from "../../../../client/store/graph";
-import { ProcedureTest } from "../../..";
 
 const { Dragger } = Upload;
 

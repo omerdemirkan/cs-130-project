@@ -6,7 +6,7 @@ describe('Create Dataset Modal', () => {
     const onClose = jest.fn();
     const onSubmit = jest.fn((_: string) => Promise.resolve());
 
-    const renderEditorDrawer = (open: boolean) => {
+    const renderCreateDatasetModal = (open: boolean) => {
         render(<CreateDatasetModal
             open={open}
             onClose={onClose}
@@ -16,17 +16,17 @@ describe('Create Dataset Modal', () => {
     }
 
     it('doesn\'t render when closed and renders when open.', () => {
-        renderEditorDrawer(false);
+        renderCreateDatasetModal(false);
         expect(screen.findByRole('dialog')).toEqual(Promise.resolve({}));
 
-        renderEditorDrawer(true);
+        renderCreateDatasetModal(true);
         expect(screen.getByRole('dialog')).toBeInTheDocument();
     });
 
 
 
     it('changes inputs to be case-insensitive with "-" replacing " ".', () => {        
-        renderEditorDrawer(true);
+        renderCreateDatasetModal(true);
 
         const textbox = screen.getByRole('textbox');
         fireEvent.change(textbox, {target: {value: 'Test Dataset Name'}});
@@ -37,7 +37,7 @@ describe('Create Dataset Modal', () => {
 
 
     it('it calls close and submit logic once.', async () => {        
-        renderEditorDrawer(true);
+        renderCreateDatasetModal(true);
 
         const button_cancel = screen.getByRole('button', { name: /cancel/i });
         fireEvent.click(button_cancel);

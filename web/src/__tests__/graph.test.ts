@@ -3,7 +3,7 @@ import type { GraphNode, GraphEdge } from '../client/store/graph';
 import type {FusekiExpansionQueryResults } from '../utils/fuseki';
 import '@testing-library/jest-dom'
 
-it('renders combines the results of an expansion query with existing nodes.', () => {
+it('combines the results of an expansion query with existing nodes.', () => {
     const originalNodes: GraphNode[] = [
         { id: 'id1', label: 'l1', fusekiObjectType: 'bnode' }, 
         { id: 'id2', label: 'l2', fusekiObjectType: 'literal' }, 
