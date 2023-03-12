@@ -26,17 +26,17 @@
 
 #### Type declaration
 
-| Name | Type |
-| :------ | :------ |
-| `object` | [`FusekiQueryBinding`](../wiki/utils.fuseki#fusekiquerybinding) |
+| Name        | Type                                                            |
+| :---------- | :-------------------------------------------------------------- |
+| `object`    | [`FusekiQueryBinding`](../wiki/utils.fuseki#fusekiquerybinding) |
 | `predicate` | [`FusekiQueryBinding`](../wiki/utils.fuseki#fusekiquerybinding) |
-| `subject` | [`FusekiQueryBinding`](../wiki/utils.fuseki#fusekiquerybinding) |
+| `subject`   | [`FusekiQueryBinding`](../wiki/utils.fuseki#fusekiquerybinding) |
 
 #### Defined in
 
 [src/utils/fuseki.ts:366](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L366)
 
-___
+---
 
 ### FusekiExpansionQueryResults
 
@@ -44,28 +44,28 @@ ___
 
 #### Type declaration
 
-| Name | Type |
-| :------ | :------ |
-| `head` | { `vars`: `string`[]  } |
-| `head.vars` | `string`[] |
-| `results` | { `bindings`: [`FusekiExpansionQueryBindings`](../wiki/utils.fuseki#fusekiexpansionquerybindings)[]  } |
-| `results.bindings` | [`FusekiExpansionQueryBindings`](../wiki/utils.fuseki#fusekiexpansionquerybindings)[] |
+| Name               | Type                                                                                                  |
+| :----------------- | :---------------------------------------------------------------------------------------------------- |
+| `head`             | { `vars`: `string`[] }                                                                                |
+| `head.vars`        | `string`[]                                                                                            |
+| `results`          | { `bindings`: [`FusekiExpansionQueryBindings`](../wiki/utils.fuseki#fusekiexpansionquerybindings)[] } |
+| `results.bindings` | [`FusekiExpansionQueryBindings`](../wiki/utils.fuseki#fusekiexpansionquerybindings)[]                 |
 
 #### Defined in
 
 [src/utils/fuseki.ts:372](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L372)
 
-___
+---
 
 ### FusekiObjectType
 
-Ƭ **FusekiObjectType**: ``"bnode"`` \| ``"literal"`` \| ``"uri"``
+Ƭ **FusekiObjectType**: `"bnode"` \| `"literal"` \| `"uri"`
 
 #### Defined in
 
 [src/utils/fuseki.ts:364](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L364)
 
-___
+---
 
 ### FusekiQueryBinding
 
@@ -73,17 +73,17 @@ ___
 
 #### Type declaration
 
-| Name | Type |
-| :------ | :------ |
-| `datatype?` | `string` |
-| `type` | [`FusekiObjectType`](../wiki/utils.fuseki#fusekiobjecttype) |
-| `value` | `string` |
+| Name        | Type                                                        |
+| :---------- | :---------------------------------------------------------- |
+| `datatype?` | `string`                                                    |
+| `type`      | [`FusekiObjectType`](../wiki/utils.fuseki#fusekiobjecttype) |
+| `value`     | `string`                                                    |
 
 #### Defined in
 
 [src/utils/fuseki.ts:358](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L358)
 
-___
+---
 
 ### FusekiQueryBindings
 

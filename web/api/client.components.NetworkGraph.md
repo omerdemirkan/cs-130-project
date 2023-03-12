@@ -10,18 +10,18 @@
 
 ### NetworkGraph
 
-▸ **NetworkGraph**(`props`, `context?`): ``null`` \| `ReactElement`<`any`, `any`\>
+▸ **NetworkGraph**(`props`, `context?`): `null` \| `ReactElement`<`any`, `any`\>
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `props` | `GraphCanvasProps` & { `ref?`: `Ref`<`GraphCanvasRef`\>  } |
-| `context?` | `any` |
+| Name       | Type                                                      |
+| :--------- | :-------------------------------------------------------- |
+| `props`    | `GraphCanvasProps` & { `ref?`: `Ref`<`GraphCanvasRef`\> } |
+| `context?` | `any`                                                     |
 
 #### Returns
 
-``null`` \| `ReactElement`<`any`, `any`\>
+`null` \| `ReactElement`<`any`, `any`\>
 
 #### Defined in
 

@@ -10,7 +10,7 @@
 
 ### getServerAuthSession
 
-▸ **getServerAuthSession**(`ctx`): `Promise`<``null`` \| `Session`\>
+▸ **getServerAuthSession**(`ctx`): `Promise`<`null` \| `Session`\>
 
 Wrapper for unstable_getServerSession, used in trpc createContext and the
 restricted API route
@@ -24,15 +24,15 @@ https://next-auth.js.org/configuration/nextjs
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `ctx` | `Object` |
-| `ctx.req` | `IncomingMessage` & { `cookies`: `Partial`<{ `[key: string]`: `string`;  }\>  } |
-| `ctx.res` | `ServerResponse`<`IncomingMessage`\> |
+| Name      | Type                                                                          |
+| :-------- | :---------------------------------------------------------------------------- |
+| `ctx`     | `Object`                                                                      |
+| `ctx.req` | `IncomingMessage` & { `cookies`: `Partial`<{ `[key: string]`: `string`; }\> } |
+| `ctx.res` | `ServerResponse`<`IncomingMessage`\>                                          |
 
 #### Returns
 
-`Promise`<``null`` \| `Session`\>
+`Promise`<`null` \| `Session`\>
 
 #### Defined in
 

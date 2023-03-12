@@ -16,8 +16,8 @@ Authentication Compoentn!
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name                   | Type      |
+| :--------------------- | :-------- |
 | `WithoutAuthComponent` | `FC`<{}\> |
 
 #### Returns

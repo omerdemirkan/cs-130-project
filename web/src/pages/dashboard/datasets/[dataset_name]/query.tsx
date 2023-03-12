@@ -35,11 +35,11 @@ function QueryPage() {
   const queryMutation = api.fuseki.queryDataset.useMutation();
   const expansionQueryMutation = api.fuseki.expansionQueryDataset.useMutation();
   const saveGraph = api.prisma.saveGraph.useMutation({
-    onSuccess({id}) {
-      const url = `http://localhost:3000/dashboard/datasets/${datasetName}/${id}`
+    onSuccess({ id }) {
+      const url = `http://localhost:3000/dashboard/datasets/${datasetName}/${id}`;
       navigator.clipboard.writeText(url);
-      messageApi.open({content: "URL copied to clipboard!", type: "success"})
-    }
+      messageApi.open({ content: "URL copied to clipboard!", type: "success" });
+    },
   });
 
   async function handleNodeSearch(node: GraphNode) {

@@ -14,4 +14,4 @@
 
 #### Defined in
 
-[src/pages/_app.tsx:20](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/pages/_app.tsx#L20)
+[src/pages/\_app.tsx:20](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/pages/_app.tsx#L20)

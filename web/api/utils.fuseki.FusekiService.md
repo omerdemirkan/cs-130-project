@@ -42,8 +42,8 @@
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name       | Type     |
+| :--------- | :------- |
 | `pathname` | `string` |
 
 #### Defined in
@@ -60,7 +60,7 @@
 
 [src/utils/fuseki.ts:26](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L26)
 
-___
+---
 
 ### pathname
 
@@ -78,8 +78,8 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name          | Type     |
+| :------------ | :------- |
 | `datasetName` | `string` |
 
 #### Returns
@@ -90,7 +90,7 @@ ___
 
 [src/utils/fuseki.ts:224](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L224)
 
-___
+---
 
 ### countGraphsTriples
 
@@ -98,10 +98,10 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name          | Type     |
+| :------------ | :------- |
 | `datasetName` | `string` |
-| `endpoint` | `string` |
+| `endpoint`    | `string` |
 
 #### Returns
 
@@ -111,7 +111,7 @@ ___
 
 [src/utils/fuseki.ts:277](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L277)
 
-___
+---
 
 ### createDataset
 
@@ -119,11 +119,11 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `«destructured»` | `Object` |
-| › `datasetName` | `string` |
-| › `datasetType` | ``"tdb2"`` \| ``"mem"`` |
+| Name             | Type                |
+| :--------------- | :------------------ |
+| `«destructured»` | `Object`            |
+| › `datasetName`  | `string`            |
+| › `datasetType`  | `"tdb2"` \| `"mem"` |
 
 #### Returns
 
@@ -133,7 +133,7 @@ ___
 
 [src/utils/fuseki.ts:230](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L230)
 
-___
+---
 
 ### deleteDataset
 
@@ -141,8 +141,8 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name          | Type     |
+| :------------ | :------- |
 | `datasetName` | `string` |
 
 #### Returns
@@ -153,7 +153,7 @@ ___
 
 [src/utils/fuseki.ts:218](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L218)
 
-___
+---
 
 ### expansionQueryDataset
 
@@ -161,10 +161,10 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `«destructured»` | `Object` |
-| › `datasetName` | `string` |
+| Name              | Type                                                |
+| :---------------- | :-------------------------------------------------- |
+| `«destructured»`  | `Object`                                            |
+| › `datasetName`   | `string`                                            |
 | › `expansionNode` | [`GraphNode`](../wiki/client.store.graph#graphnode) |
 
 #### Returns
@@ -175,7 +175,7 @@ ___
 
 [src/utils/fuseki.ts:106](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L106)
 
-___
+---
 
 ### fetchGraph
 
@@ -183,10 +183,10 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name          | Type     |
+| :------------ | :------- |
 | `datasetName` | `string` |
-| `graphName` | `string` |
+| `graphName`   | `string` |
 
 #### Returns
 
@@ -196,7 +196,7 @@ ___
 
 [src/utils/fuseki.ts:302](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L302)
 
-___
+---
 
 ### getAsObjectExpansionQuery
 
@@ -204,8 +204,8 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name            | Type                                                |
+| :-------------- | :-------------------------------------------------- |
 | `expansionNode` | [`GraphNode`](../wiki/client.store.graph#graphnode) |
 
 #### Returns
@@ -216,7 +216,7 @@ ___
 
 [src/utils/fuseki.ts:179](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L179)
 
-___
+---
 
 ### getAsSubjectExpansionQuery
 
@@ -224,8 +224,8 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name            | Type                                                |
+| :-------------- | :-------------------------------------------------- |
 | `expansionNode` | [`GraphNode`](../wiki/client.store.graph#graphnode) |
 
 #### Returns
@@ -236,7 +236,7 @@ ___
 
 [src/utils/fuseki.ts:154](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L154)
 
-___
+---
 
 ### getDatasetSize
 
@@ -244,10 +244,10 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name          | Type     |
+| :------------ | :------- |
 | `datasetName` | `string` |
-| `endpoint` | `string` |
+| `endpoint`    | `string` |
 
 #### Returns
 
@@ -257,7 +257,7 @@ ___
 
 [src/utils/fuseki.ts:191](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L191)
 
-___
+---
 
 ### getDatasetStats
 
@@ -265,8 +265,8 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name          | Type     |
+| :------------ | :------- |
 | `datasetName` | `string` |
 
 #### Returns
@@ -277,7 +277,7 @@ ___
 
 [src/utils/fuseki.ts:77](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L77)
 
-___
+---
 
 ### getFusekiUploadUrl
 
@@ -285,8 +285,8 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name          | Type     |
+| :------------ | :------- |
 | `datasetName` | `string` |
 
 #### Returns
@@ -297,7 +297,7 @@ ___
 
 [src/utils/fuseki.ts:49](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L49)
 
-___
+---
 
 ### getFusekiUrl
 
@@ -305,8 +305,8 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name  | Type     |
+| :---- | :------- |
 | `url` | `string` |
 
 #### Returns
@@ -317,7 +317,7 @@ ___
 
 [src/utils/fuseki.ts:35](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L35)
 
-___
+---
 
 ### getNodeQueryStrRepresentation
 
@@ -325,8 +325,8 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name            | Type                                                |
+| :-------------- | :-------------------------------------------------- |
 | `expansionNode` | [`GraphNode`](../wiki/client.store.graph#graphnode) |
 
 #### Returns
@@ -337,7 +337,7 @@ ___
 
 [src/utils/fuseki.ts:166](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L166)
 
-___
+---
 
 ### getServerData
 
@@ -351,7 +351,7 @@ ___
 
 [src/utils/fuseki.ts:55](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L55)
 
-___
+---
 
 ### getServerStatus
 
@@ -365,7 +365,7 @@ ___
 
 [src/utils/fuseki.ts:62](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L62)
 
-___
+---
 
 ### getTasks
 
@@ -379,7 +379,7 @@ ___
 
 [src/utils/fuseki.ts:271](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L271)
 
-___
+---
 
 ### queryDataset
 
@@ -387,11 +387,11 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name             | Type     |
+| :--------------- | :------- |
 | `«destructured»` | `Object` |
-| › `datasetName` | `string` |
-| › `query` | `string` |
+| › `datasetName`  | `string` |
+| › `query`        | `string` |
 
 #### Returns
 
@@ -401,7 +401,7 @@ ___
 
 [src/utils/fuseki.ts:86](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L86)
 
-___
+---
 
 ### saveGraph
 
@@ -409,11 +409,11 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name          | Type     |
+| :------------ | :------- |
 | `datasetName` | `string` |
-| `graphName` | `string` |
-| `code` | `string` |
+| `graphName`   | `string` |
+| `code`        | `string` |
 
 #### Returns
 

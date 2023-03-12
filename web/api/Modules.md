@@ -14,7 +14,7 @@
 - [pages/api/auth/[...nextauth]](../wiki/pages.api.auth.%5B...nextauth%5D)
 - [pages/api/trpc/[trpc]](../wiki/pages.api.trpc.%5Btrpc%5D)
 - [pages/dashboard/datasets](../wiki/pages.dashboard.datasets)
-- [pages/dashboard/datasets/[dataset\_name]/query](../wiki/pages.dashboard.datasets.%5Bdataset_name%5D.query)
+- [pages/dashboard/datasets/[dataset_name]/query](../wiki/pages.dashboard.datasets.%5Bdataset_name%5D.query)
 - [server/api/root](../wiki/server.api.root)
 - [server/api/routers/fuseki](../wiki/server.api.routers.fuseki)
 - [server/api/routers/prisma](../wiki/server.api.routers.prisma)

@@ -25,15 +25,15 @@ node_modules/zustand/react.d.ts:11
 #### Type parameters
 
 | Name |
-| :------ |
-| `U` |
+| :--- |
+| `U`  |
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name       | Type                                       |
+| :--------- | :----------------------------------------- |
 | `selector` | (`state`: `SparqlEditorStoreState`) => `U` |
-| `equals?` | (`a`: `U`, `b`: `U`) => `boolean` |
+| `equals?`  | (`a`: `U`, `b`: `U`) => `boolean`          |
 
 #### Returns
 
