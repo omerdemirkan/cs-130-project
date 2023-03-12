@@ -14,7 +14,7 @@ import { message, Upload } from "antd";
 import { useSparqlEditorStore } from "../../../../client/store/editor";
 import { NetworkGraph } from "../../../../client/components/NetworkGraph";
 import { useGraphStore } from "../../../../client/store/graph";
-import { api } from "../../../../utils/api"
+import { api } from "../../../../utils/api";
 import type { GraphNode } from "../../../../client/store/graph";
 
 const { Dragger } = Upload;
@@ -34,38 +34,49 @@ function QueryPage() {
 
   const queryMutation = api.fuseki.queryDataset.useMutation();
   const expansionQueryMutation = api.fuseki.expansionQueryDataset.useMutation();
-  const saveGraph = api.prisma.saveGraph.useMutation()
-  const readGraph = api.prisma.readGraph.useMutation()
+  const saveGraph = api.prisma.saveGraph.useMutation();
+  const readGraph = api.prisma.readGraph.useMutation();
 
   async function handleNodeSearch(node: GraphNode) {
-    const result = await expansionQueryMutation.mutateAsync({datasetName: datasetName, expansionNode: node});
+    const result = await expansionQueryMutation.mutateAsync({
+      datasetName: datasetName,
+      expansionNode: node,
+    });
 
     if (!result.results.bindings.length) {
-      await messageApi.open({ type: "error", content: `Either not a node or has no neighbors`, });
+      await messageApi.open({
+        type: "error",
+        content: `Either not a node or has no neighbors`,
+      });
       return;
     }
     setStartNode(node);
     setEditorDrawerOpen(false);
   }
 
-
-
   async function handleNodeClicked(node: GraphNode) {
-    const result = await expansionQueryMutation.mutateAsync({datasetName: datasetName, expansionNode: node});
+    const result = await expansionQueryMutation.mutateAsync({
+      datasetName: datasetName,
+      expansionNode: node,
+    });
 
     if (!result.results.bindings.length) {
-      await messageApi.open({ type: "error", content: 'No expansions possible!', });
+      await messageApi.open({
+        type: "error",
+        content: "No expansions possible!",
+      });
       return;
     }
     addFusekiExpansionQueryResult(result);
     setEditorDrawerOpen(false);
 
-    await saveGraph.mutateAsync({nodes: nodes, edges: edges});
-    await readGraph.mutateAsync()
-    await messageApi.open({ type: "error", content: readGraph.data?.graphContents });
+    await saveGraph.mutateAsync({ nodes: nodes, edges: edges });
+    await readGraph.mutateAsync();
+    await messageApi.open({
+      type: "error",
+      content: readGraph.data?.graphContents,
+    });
   }
-
-
 
   return (
     <>
@@ -73,13 +84,21 @@ function QueryPage() {
       <EditorDrawer
         open={editorDrawerOpen}
         onClose={() => setEditorDrawerOpen(false)}
-        onSubmit={(query: string) => queryMutation.mutateAsync({ datasetName, query })}
+        onSubmit={(query: string) =>
+          queryMutation.mutateAsync({ datasetName, query })
+        }
         loading={queryMutation.isLoading}
         queryResults={queryMutation.data}
         onNodeSearch={handleNodeSearch}
       />
-      <div id="content-wrapper" className="flex justify-center flex-col h-screen">
-        <div id="graph-header" className="flex justify-center space-x-4 py-3 px-3 bg-slate-700">
+      <div
+        id="content-wrapper"
+        className="flex h-screen flex-col justify-center"
+      >
+        <div
+          id="graph-header"
+          className="flex justify-center space-x-4 bg-slate-700 py-3 px-3"
+        >
           <div id="search-bar" className="w-2/3">
             <SearchBar
               onSearch={(val) =>
@@ -92,14 +111,14 @@ function QueryPage() {
             />
           </div>
           <Button onClick={() => setEditorDrawerOpen(true)}>
-              Write SPARQL Query
+            Write SPARQL Query
           </Button>
         </div>
         <div className="flex justify-center">
-          {/*<ProcedureTest/> Commenting this out for now to test visual things*/} 
+          {/*<ProcedureTest/> Commenting this out for now to test visual things*/}
         </div>
         <div className="flex h-full items-start bg-slate-500">
-          <div className="w-72 bg-slate-200 pb-2 px-2 py-2">
+          <div className="w-72 bg-slate-200 px-2 py-2 pb-2">
             <FileUploadDragger
               datasetName={datasetName}
               onSuccess={() =>
@@ -134,8 +153,6 @@ function QueryPage() {
 }
 
 export default withAuth(QueryPage);
-
-
 
 type EditorDrawerProps = {
   open: boolean;
@@ -220,8 +237,6 @@ export const EditorDrawer: React.FC<EditorDrawerProps> = ({
   );
 };
 
-
-
 type FileUploadDraggerProps = {
   datasetName: string;
   onSuccess(): void;
@@ -237,7 +252,7 @@ export const FileUploadDragger: React.FC<FileUploadDraggerProps> = ({
   onSuccess,
   onError,
 }) => {
-  const getUploadUrlQuery = api.fuseki.getUploadUrl.useQuery({datasetName});
+  const getUploadUrlQuery = api.fuseki.getUploadUrl.useQuery({ datasetName });
 
   return (
     <Dragger
@@ -272,8 +287,6 @@ export const FileUploadDragger: React.FC<FileUploadDraggerProps> = ({
     </Dragger>
   );
 };
-
-
 
 type SearchBarProps = {
   onSearch(searchStr: string): void;

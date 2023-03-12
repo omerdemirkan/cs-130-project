@@ -16,7 +16,7 @@ export type GraphNode = {
 };
 
 /**
- * Type representing a graph edge. It includes the source node, 
+ * Type representing a graph edge. It includes the source node,
  * target node, an associated identifer, and a label.
  */
 export type GraphEdge = {
@@ -35,10 +35,8 @@ type GraphStoreState = {
   setStartNode(startNode: GraphNode): void;
 };
 
-
-
 /**
- * @returns A GraphStoreState hook containing no nodes or edges. 
+ * @returns A GraphStoreState hook containing no nodes or edges.
  */
 export const useGraphStore = create<GraphStoreState>()((set, get) => ({
   nodes: [],
@@ -60,8 +58,6 @@ export const useGraphStore = create<GraphStoreState>()((set, get) => ({
     set({ nodes: [startNode], edges: [] });
   },
 }));
-
-
 
 /**
  * Takes an {@code FusekiExpansionQueryResults} and adds it to specified

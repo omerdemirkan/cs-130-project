@@ -8,8 +8,8 @@ import { prismaRouter } from "./routers/prisma";
  * All routers added in /api/routers should be manually added here
  */
 export const appRouter = createTRPCRouter({
-    fuseki: fusekiRouter,
-    prisma: prismaRouter,
+  fuseki: fusekiRouter,
+  prisma: prismaRouter,
 });
 
 // export type definition of API
