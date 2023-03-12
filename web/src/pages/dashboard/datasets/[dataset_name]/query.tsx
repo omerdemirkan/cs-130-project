@@ -166,7 +166,7 @@ export const EditorDrawer: React.FC<EditorDrawerProps> = ({
     <Drawer
       title="Custom SPARQL Query"
       placement="right"
-      width={700}
+      width={1200}
       onClose={onClose}
       open={open}
       extra={
