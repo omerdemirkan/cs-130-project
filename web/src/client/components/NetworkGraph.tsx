@@ -10,6 +10,9 @@ const GraphCanvas = dynamic(
   }
 );
 
+/**
+ * A component representing a graph visualization.
+ */
 export const NetworkGraph: React.FC<
   React.ComponentProps<typeof GraphCanvas>
 > = (props) => {

@@ -12,6 +12,9 @@ type SparqlEditorStoreState = {
   setEditorText: (editorText: string) => void;
 };
 
+/**
+ * @returns A SparqlEditorStoreState hook with initialized editor texts.
+ */
 export const useSparqlEditorStore = create<SparqlEditorStoreState>()(
   persist(
     (set) => ({

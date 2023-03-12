@@ -4,9 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 /**
- * Home Page!
- * @returns 
- * @components
+ * A component representing the homepage of the app. Contains an authorization button.
  */
 const Home: NextPage = () => {
   return (
@@ -16,10 +14,11 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
 
 
-
+/**
+ * A component representing an authorization button to sign in with the respective service.
+ */
 const AuthShowcase: React.FC = () => {
   const { data: sessionData } = useSession();
 
@@ -40,3 +39,5 @@ const AuthShowcase: React.FC = () => {
     </div>
   );
 };
+
+export default Home;

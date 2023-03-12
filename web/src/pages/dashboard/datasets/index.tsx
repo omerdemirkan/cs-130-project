@@ -7,8 +7,9 @@ import { useRouter } from "next/router";
 import { api } from "../../../utils/api";
 
 /**
- * Dashboard page!
- * @returns 
+ * A component representing the dashboard page which is displayed after signing
+ * in. Includes a button to create a new dataset, as well as displays all existing
+ * datasets associated with the currently signed in account.
  */
 const DashboardPage: React.FC = () => {
   const { data: sessionData } = useSession();
@@ -90,6 +91,9 @@ const DashboardPage: React.FC = () => {
   );
 };
 
+
+
+
 type CreateDatasetModalProps = {
   onSubmit(datasetName: string): void | Promise<void>;
   open: boolean;
@@ -97,6 +101,9 @@ type CreateDatasetModalProps = {
   loading: boolean;
 };
 
+/**
+ * A component representing a model which can create a new dataset.
+ */
 export const CreateDatasetModal: React.FC<CreateDatasetModalProps> = ({
   onSubmit,
   open,
@@ -134,6 +141,8 @@ export const CreateDatasetModal: React.FC<CreateDatasetModalProps> = ({
     </>
   );
 };
+
+
 
 type DeleteDatasetModalProps = {
   datasetName : string;

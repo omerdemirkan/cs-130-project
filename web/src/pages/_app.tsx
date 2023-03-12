@@ -6,6 +6,9 @@ import { api } from "../utils/api";
 
 import "../styles/globals.css";
 
+/**
+ * The main entrypoint for the Fuseki Graph Visualiation app.
+ */
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
@@ -17,4 +20,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
   );
 };
 
+
+
+/**
+ * The main entrypoint for the Fuseki Graph Visualiation app.
+ */
 export default api.withTRPC(MyApp);
