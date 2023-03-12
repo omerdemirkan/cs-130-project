@@ -20,8 +20,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
   );
 };
 
-
-
 /**
  * The main entrypoint for the Fuseki Graph Visualiation app.
  */

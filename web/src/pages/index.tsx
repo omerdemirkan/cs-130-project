@@ -14,8 +14,6 @@ const Home: NextPage = () => {
   );
 };
 
-
-
 /**
  * A component representing an authorization button to sign in with the respective service.
  */
