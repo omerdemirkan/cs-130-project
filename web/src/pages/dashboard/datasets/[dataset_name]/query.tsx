@@ -34,7 +34,13 @@ function QueryPage() {
 
   const queryMutation = api.fuseki.queryDataset.useMutation();
   const expansionQueryMutation = api.fuseki.expansionQueryDataset.useMutation();
-  const saveGraph = api.prisma.saveGraph.useMutation();
+  const saveGraph = api.prisma.saveGraph.useMutation({
+    onSuccess({id}) {
+      const url = `http://localhost:3000/dashboard/datasets/${datasetName}/${id}`
+      navigator.clipboard.writeText(url);
+      messageApi.open({content: "URL copied to clipboard!", type: "success"})
+    }
+  });
 
   async function handleNodeSearch(node: GraphNode) {
     const result = await expansionQueryMutation.mutateAsync({
@@ -110,7 +116,7 @@ function QueryPage() {
           {/*<ProcedureTest/> Commenting this out for now to test visual things*/}
         </div>
         <div className="flex justify-center">
-          <Button onClick={() => saveGraph.mutateAsync({nodes: nodes, edges: edges})}>Save graph</Button>
+          <Button onClick={() => saveGraph.mutateAsync({nodes: nodes, edges: edges})}>Share graph</Button>
         </div>
         <div className="flex h-full items-start bg-slate-500">
           <div className="w-72 bg-slate-200 px-2 py-2 pb-2">
