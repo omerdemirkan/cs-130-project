@@ -17,7 +17,7 @@
 
 [src/pages/api/auth/[...nextauth].ts:9](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/pages/api/auth/[...nextauth].ts#L9)
 
-___
+---
 
 ### default
 

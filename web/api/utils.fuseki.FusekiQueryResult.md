@@ -17,15 +17,15 @@
 
 #### Type declaration
 
-| Name | Type |
-| :------ | :------ |
+| Name   | Type       |
+| :----- | :--------- |
 | `vars` | `string`[] |
 
 #### Defined in
 
 [src/utils/fuseki.ts:346](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/utils/fuseki.ts#L346)
 
-___
+---
 
 ### results
 
@@ -33,8 +33,8 @@ ___
 
 #### Type declaration
 
-| Name | Type |
-| :------ | :------ |
+| Name       | Type                                                                |
+| :--------- | :------------------------------------------------------------------ |
 | `bindings` | [`FusekiQueryBindings`](../wiki/utils.fuseki#fusekiquerybindings)[] |
 
 #### Defined in

@@ -16,9 +16,9 @@ Next `API` route handler
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `req` | `NextApiRequest` |
+| Name  | Type                      |
+| :---- | :------------------------ |
+| `req` | `NextApiRequest`          |
 | `res` | `NextApiResponse`<`any`\> |
 
 #### Returns

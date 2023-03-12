@@ -12,60 +12,60 @@
 
 ### EditorDrawer
 
-▸ **EditorDrawer**(`props`, `context?`): ``null`` \| `ReactElement`<`any`, `any`\>
+▸ **EditorDrawer**(`props`, `context?`): `null` \| `ReactElement`<`any`, `any`\>
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `props` | `EditorDrawerProps` |
-| `context?` | `any` |
+| Name       | Type                |
+| :--------- | :------------------ |
+| `props`    | `EditorDrawerProps` |
+| `context?` | `any`               |
 
 #### Returns
 
-``null`` \| `ReactElement`<`any`, `any`\>
+`null` \| `ReactElement`<`any`, `any`\>
 
 #### Defined in
 
 node_modules/@types/react/index.d.ts:521
 
-___
+---
 
 ### SearchBar
 
-▸ **SearchBar**(`props`, `context?`): ``null`` \| `ReactElement`<`any`, `any`\>
+▸ **SearchBar**(`props`, `context?`): `null` \| `ReactElement`<`any`, `any`\>
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `props` | `SearchBarProps` |
-| `context?` | `any` |
+| Name       | Type             |
+| :--------- | :--------------- |
+| `props`    | `SearchBarProps` |
+| `context?` | `any`            |
 
 #### Returns
 
-``null`` \| `ReactElement`<`any`, `any`\>
+`null` \| `ReactElement`<`any`, `any`\>
 
 #### Defined in
 
 node_modules/@types/react/index.d.ts:521
 
-___
+---
 
 ### default
 
-▸ **default**(`props`, `context?`): ``null`` \| `ReactElement`<`any`, `any`\>
+▸ **default**(`props`, `context?`): `null` \| `ReactElement`<`any`, `any`\>
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `props` | `Object` |
-| `context?` | `any` |
+| Name       | Type     |
+| :--------- | :------- |
+| `props`    | `Object` |
+| `context?` | `any`    |
 
 #### Returns
 
-``null`` \| `ReactElement`<`any`, `any`\>
+`null` \| `ReactElement`<`any`, `any`\>
 
 #### Defined in
 

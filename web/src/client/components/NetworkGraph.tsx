@@ -18,7 +18,7 @@ export const NetworkGraph: React.FC<
 > = (props) => {
   return (
     <div style={{ width: "100%", height: "100%", position: "relative" }}>
-      <GraphCanvas {...props} />
+      <GraphCanvas labelType="all" {...props} />
     </div>
   );
 };

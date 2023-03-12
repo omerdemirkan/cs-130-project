@@ -21,9 +21,9 @@ export const prismaRouter = createTRPCRouter({
       });
     }),
 
-    readGraph: publicProcedure
-        .input(z.object({ graphId: z.string() }))
-        .query(({ ctx, input }) => {
-            return ctx.prisma.graph.findUnique({where: { id: input.graphId, },});
-        })
+  readGraph: publicProcedure
+    .input(z.object({ graphId: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.graph.findUnique({ where: { id: input.graphId } });
+    }),
 });

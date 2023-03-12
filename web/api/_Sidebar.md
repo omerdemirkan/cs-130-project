@@ -10,7 +10,7 @@
 - [client/store/editor](../wiki/client.store.editor)
 - [client/store/graph](../wiki/client.store.graph)
 - [pages](../wiki/pages)
-- [pages/_app](../wiki/pages._app)
+- [pages/\_app](../wiki/pages._app)
 - [nextauth]](../wiki/pages.api.auth.%5B...nextauth%5D)
 - [pages/api/trpc/[trpc]](../wiki/pages.api.trpc.%5Btrpc%5D)
 - [pages/dashboard/datasets](../wiki/pages.dashboard.datasets)

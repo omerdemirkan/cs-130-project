@@ -10,18 +10,18 @@
 
 ### Editor
 
-▸ **Editor**(`props`, `context?`): ``null`` \| `ReactElement`<`any`, `any`\>
+▸ **Editor**(`props`, `context?`): `null` \| `ReactElement`<`any`, `any`\>
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `props` | `EditorProps` |
-| `context?` | `any` |
+| Name       | Type          |
+| :--------- | :------------ |
+| `props`    | `EditorProps` |
+| `context?` | `any`         |
 
 #### Returns
 
-``null`` \| `ReactElement`<`any`, `any`\>
+`null` \| `ReactElement`<`any`, `any`\>
 
 #### Defined in
 

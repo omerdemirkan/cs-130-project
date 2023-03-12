@@ -20,10 +20,10 @@
 
 #### Type declaration
 
-| Name | Type |
-| :------ | :------ |
-| `id` | `string` |
-| `label` | `string` |
+| Name     | Type     |
+| :------- | :------- |
+| `id`     | `string` |
+| `label`  | `string` |
 | `source` | `string` |
 | `target` | `string` |
 
@@ -31,7 +31,7 @@
 
 [src/client/store/graph.ts:14](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/client/store/graph.ts#L14)
 
-___
+---
 
 ### GraphNode
 
@@ -39,11 +39,11 @@ ___
 
 #### Type declaration
 
-| Name | Type |
-| :------ | :------ |
+| Name               | Type                                                        |
+| :----------------- | :---------------------------------------------------------- |
 | `fusekiObjectType` | [`FusekiObjectType`](../wiki/utils.fuseki#fusekiobjecttype) |
-| `id` | `string` |
-| `label` | `string` |
+| `id`               | `string`                                                    |
+| `label`            | `string`                                                    |
 
 #### Defined in
 
@@ -57,19 +57,19 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `«destructured»` | `Object` |
-| › `existingEdges?` | [`GraphEdge`](../wiki/client.store.graph#graphedge)[] |
-| › `existingNodes?` | [`GraphNode`](../wiki/client.store.graph#graphnode)[] |
+| Name                  | Type                                                                              |
+| :-------------------- | :-------------------------------------------------------------------------------- |
+| `«destructured»`      | `Object`                                                                          |
+| › `existingEdges?`    | [`GraphEdge`](../wiki/client.store.graph#graphedge)[]                             |
+| › `existingNodes?`    | [`GraphNode`](../wiki/client.store.graph#graphnode)[]                             |
 | › `fusekiQueryResult` | [`FusekiExpansionQueryResults`](../wiki/utils.fuseki#fusekiexpansionqueryresults) |
 
 #### Returns
 
 `Object`
 
-| Name | Type |
-| :------ | :------ |
+| Name       | Type                                                  |
+| :--------- | :---------------------------------------------------- |
 | `newEdges` | [`GraphEdge`](../wiki/client.store.graph#graphedge)[] |
 | `newNodes` | [`GraphNode`](../wiki/client.store.graph#graphnode)[] |
 
@@ -77,7 +77,7 @@ ___
 
 [src/client/store/graph.ts:51](https://github.com/omerdemirkan/cs-130-project/blob/c363b4d/web/src/client/store/graph.ts#L51)
 
-___
+---
 
 ### useGraphStore
 
@@ -96,15 +96,15 @@ node_modules/zustand/react.d.ts:11
 #### Type parameters
 
 | Name |
-| :------ |
-| `U` |
+| :--- |
+| `U`  |
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name       | Type                                |
+| :--------- | :---------------------------------- |
 | `selector` | (`state`: `GraphStoreState`) => `U` |
-| `equals?` | (`a`: `U`, `b`: `U`) => `boolean` |
+| `equals?`  | (`a`: `U`, `b`: `U`) => `boolean`   |
 
 #### Returns
 
