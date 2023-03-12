@@ -1,3 +1,6 @@
+/**
+ * @module web/client
+ */
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -14,6 +17,7 @@ type SparqlEditorStoreState = {
 
 /**
  * @returns A SparqlEditorStoreState hook with initialized editor texts.
+ * @category Components
  */
 export const useSparqlEditorStore = create<SparqlEditorStoreState>()(
   persist(

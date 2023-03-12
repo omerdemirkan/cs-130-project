@@ -1,3 +1,6 @@
+/**
+ * @module web/pages
+ */
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { withAuth } from "../../../client/hoc/withAuth";
@@ -10,6 +13,7 @@ import { api } from "../../../utils/api";
  * A component representing the dashboard page which is displayed after signing
  * in. Includes a button to create a new dataset, as well as displays all existing
  * datasets associated with the currently signed in account.
+ * @category Pages
  */
 const DashboardPage: React.FC = () => {
   const { data: sessionData } = useSession();
@@ -105,6 +109,7 @@ type CreateDatasetModalProps = {
 
 /**
  * A component representing a model which can create a new dataset.
+ * @category Pages
  */
 export const CreateDatasetModal: React.FC<CreateDatasetModalProps> = ({
   onSubmit,

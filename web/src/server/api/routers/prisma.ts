@@ -1,7 +1,14 @@
+/**
+ * @module web/server
+ */
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { GraphNode, GraphEdge } from "../../../client/store/graph";
 
+/**
+ * A router relating to the Prisma backend for storing and retrieving graphs.
+ * @category Graph
+ */
 export const prismaRouter = createTRPCRouter({
   /**
    * Saves and pushes a graph to the Prisma backend as a JSON string.

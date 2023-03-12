@@ -1,3 +1,6 @@
+/**
+ * @module web/pages
+ */
 import { withAuth } from "../../../../client/hoc/withAuth";
 import type {
   FusekiQueryResult,
@@ -23,6 +26,7 @@ const { Dragger } = Upload;
  * A component representing the graph visualization page. It contains a search bar
  * for making dataset searches, a field for uploading .ttl files to amend the dataset,
  * a modal for making SPARQL searches, and the graph vizualizer itself.
+ * @category Pages
  */
 function QueryPage() {
   const [messageApi, messageContextHolder] = message.useMessage();
@@ -184,6 +188,7 @@ type EditorDrawerProps = {
  * A component representing a modal which has an input field for sending SPARQL queries
  * into the currently loaded dataset. When submitted the modal will display the result
  * in a table.
+ * @category Pages
  */
 export const EditorDrawer: React.FC<EditorDrawerProps> = ({
   open,
@@ -263,6 +268,7 @@ type FileUploadDraggerProps = {
 /**
  * A component representing an area which .ttl files can be dragged onto to upload
  * to the current dataset.
+ * @category Pages
  */
 export const FileUploadDragger: React.FC<FileUploadDraggerProps> = ({
   datasetName,
@@ -311,6 +317,7 @@ type SearchBarProps = {
 
 /**
  * A component representing a search bar.
+ * @category Pages
  */
 export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [searchVal, setSearchValue] = useState("");

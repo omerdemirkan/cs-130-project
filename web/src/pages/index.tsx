@@ -1,3 +1,6 @@
+/**
+ * @module web/pages
+ */
 import { type NextPage } from "next";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -5,6 +8,7 @@ import { useEffect } from "react";
 
 /**
  * A component representing the homepage of the app. Contains an authorization button.
+ * @category Pages
  */
 const Home: NextPage = () => {
   return (
@@ -16,8 +20,9 @@ const Home: NextPage = () => {
 
 /**
  * A component representing an authorization button to sign in with the respective service.
+ * @category Pages
  */
-const AuthShowcase: React.FC = () => {
+export const AuthShowcase: React.FC = () => {
   const { data: sessionData } = useSession();
 
   const router = useRouter();

@@ -1,3 +1,6 @@
+/**
+ * @module web/server
+ */
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { FusekiService } from "../../../utils/fuseki";
@@ -8,6 +11,7 @@ const fusekiClient = new FusekiService("http://localhost:3030");
 
 /**
  * Wrapper for FusekiService containing tRPC procedures related to Fuseki operations.
+ * @category Graph
  */
 export const fusekiRouter = createTRPCRouter({
   /**
