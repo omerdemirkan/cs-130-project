@@ -28,8 +28,13 @@ function QueryPage() {
   const [messageApi, messageContextHolder] = message.useMessage();
   const [editorDrawerOpen, setEditorDrawerOpen] = useState(false);
   const router = useRouter();
-  const { nodes, edges, setStartNode, addFusekiExpansionQueryResult } =
-    useGraphStore();
+  const {
+    nodes,
+    edges,
+    setStartNode,
+    addFusekiExpansionQueryResult,
+    removeNodeById,
+  } = useGraphStore();
   const datasetName = router.query["dataset_name"] as string;
 
   const queryMutation = api.fuseki.queryDataset.useMutation();
@@ -76,6 +81,10 @@ function QueryPage() {
     setEditorDrawerOpen(false);
   }
 
+  function handleNodeRightClicked(node: GraphNode) {
+    removeNodeById(node.id);
+  }
+
   return (
     <>
       {messageContextHolder}
@@ -111,7 +120,11 @@ function QueryPage() {
           <Button onClick={() => setEditorDrawerOpen(true)}>
             Write SPARQL Query
           </Button>
-          <Button onClick={() => saveGraph.mutateAsync({nodes: nodes, edges: edges})}>
+          <Button
+            onClick={() =>
+              saveGraph.mutateAsync({ nodes: nodes, edges: edges })
+            }
+          >
             Share graph
           </Button>
         </div>
@@ -119,7 +132,7 @@ function QueryPage() {
           {/*<ProcedureTest/> Commenting this out for now to test visual things*/}
         </div>
         <div className="relative h-full items-start bg-transparent">
-          <main className="absolute z-1 h-full w-full">
+          <main className="z-1 absolute h-full w-full">
             <NetworkGraph
               // theme={darkTheme}
               // draggable
@@ -128,9 +141,12 @@ function QueryPage() {
               nodes={nodes}
               edges={edges}
               onNodeClick={(networkNode) => handleNodeClicked(networkNode.data)}
+              onNodeContextMenu={(networkNode) =>
+                handleNodeRightClicked(networkNode.data)
+              }
             />
           </main>
-          <div className="absolute z-2 w-72 bg-slate-200 bg-opacity-90 px-2 py-2 pb-2 m-5 rounded-md">
+          <div className="z-2 absolute m-5 w-72 rounded-md bg-slate-200 bg-opacity-90 px-2 py-2 pb-2">
             <FileUploadDragger
               datasetName={datasetName}
               onSuccess={() =>
