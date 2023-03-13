@@ -20,3 +20,7 @@ body {
 .ant-breadcrumb > ol {
   align-items: center;
 }
+
+#graph-loading{
+  margin-left:50%;
+}

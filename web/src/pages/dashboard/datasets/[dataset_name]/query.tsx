@@ -105,7 +105,7 @@ function QueryPage() {
       />
       <div
         id="content-wrapper"
-        className="flex h-screen flex-col justify-center"
+        className="flex h-screen flex-col justify-center overflow-hidden"
       >
         <PagePadding>
           <Header
@@ -127,15 +127,17 @@ function QueryPage() {
         </PagePadding>
         <PagePadding>
           <div id="graph-header" className="flex justify-between">
-            <SearchBar
-              onSearch={(val) =>
-                void handleNodeSearch({
-                  id: val,
-                  fusekiObjectType: val.includes("://") ? "uri" : "literal",
-                  label: val,
-                })
-              }
-            />
+            <div className="w-2/3">
+              <SearchBar 
+                onSearch={(val) =>
+                  void handleNodeSearch({
+                    id: val,
+                    fusekiObjectType: val.includes("://") ? "uri" : "literal",
+                    label: val,
+                  })
+                }
+              />
+            </div>
             <span>
               <Button
                 className="mr-4"

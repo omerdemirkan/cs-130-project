@@ -2,6 +2,7 @@
  * @module web/client
  */
 import dynamic from "next/dynamic";
+import { Spin } from "antd";
 
 const GraphCanvas = dynamic(
   async () => {
@@ -9,7 +10,10 @@ const GraphCanvas = dynamic(
   },
   {
     ssr: false,
-    loading: () => <p>Loading</p>,
+    loading: () => 
+        <div id="graph-loading" className="mx-96 my-96">
+          <Spin size="large" />
+        </div>
   }
 );
 
