@@ -14,8 +14,30 @@ function ReadPage() {
     ? JSON.parse(readGraph.data?.graphContents)
     : { nodes: [], edges: [] };
 
+  const edgeTable = graphContents.edges.map(
+    (edge)=>{return (
+        <tr>
+            <td>{edge.id}</td>
+            <td>{edge.label}</td>
+            <td>{edge.source}</td>
+            <td>{edge.target}</td>
+        </tr>
+    )}
+  )
+
   return (
     <>
+      <div>
+        <table>
+            <tr>
+                <td>ID</td>
+                <td>Label</td>
+                <td>Source</td>
+                <td>Target</td>
+            </tr>
+            {edgeTable}
+        </table>
+      </div>
       <div className="flex h-screen items-start gap-4">
         <main className="h-full flex-shrink flex-grow">
           <NetworkGraph
