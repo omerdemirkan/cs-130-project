@@ -8,6 +8,7 @@ import { Button, Input, Modal } from "antd";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
 import { api } from "../../../utils/api";
+import { Header } from "../../../client/components/Header";
 
 /**
  * A component representing the dashboard page which is displayed after signing
@@ -19,6 +20,7 @@ const DashboardPage: React.FC = () => {
   const { data: sessionData } = useSession();
   const [createDatasetModalOpen, setCreateDatasetModalOpen] = useState(false);
   const [deleteDatasetModalOpen, setDeleteDatasetModalOpen] = useState(false);
+  const [datasetToDelete, setDatasetToDelete] = useState("");
 
   const serverDataQuery = api.fuseki.getServerData.useQuery();
   const createDatasetMutation = api.fuseki.createDataset.useMutation();
@@ -34,6 +36,7 @@ const DashboardPage: React.FC = () => {
   async function deleteDataset(datasetName: string) {
     await deleteDatasetMutation.mutateAsync({ datasetName });
     serverDataQuery.refetch();
+    setDeleteDatasetModalOpen(false);
   }
 
   const router = useRouter();
@@ -46,18 +49,23 @@ const DashboardPage: React.FC = () => {
         onSubmit={createDataset}
         loading={createDatasetMutation.isLoading}
       />
-      <div id="dashboard-header" className="w-screen bg-slate-200">
-        <p className="mx-4 text-end">
-          {sessionData && (
-            <span>
-              Logged in as{" "}
-              <a href={"https://github.com/" + sessionData.user?.name}>
-                {sessionData.user?.name}
-              </a>
-            </span>
-          )}
-        </p>
-      </div>
+      <DeleteDatasetModal
+        datasetName = {datasetToDelete}
+        open={deleteDatasetModalOpen}
+        onClose={() => setDeleteDatasetModalOpen(false)}
+        onSubmit={deleteDataset}
+        loading={deleteDatasetMutation.isLoading}
+      />
+      <Header
+        username= {sessionData && (sessionData.user?.name as string) }
+        image={sessionData && sessionData.user?.image as string}
+        itemList = {
+          [{
+            title: "Datasets",
+            href: '/dashboard/datasets'
+          }]
+        }
+      />
       <div id="database-field" className="h-screen w-screen bg-slate-600">
         <h1 className="ml-5 text-slate-50">Datasets</h1>
         <div id="create-dataset-button" className="mb-5 ml-5">
@@ -86,7 +94,7 @@ const DashboardPage: React.FC = () => {
                   >
                     <Button>Query</Button>
                   </Link>
-                  <Button onClick={() => deleteDataset(dataset["ds.name"])}>
+                  <Button onClick={() => {setDeleteDatasetModalOpen(true); setDatasetToDelete(dataset["ds.name"])}}>
                     Delete
                   </Button>
                 </div>
@@ -149,12 +157,41 @@ export const CreateDatasetModal: React.FC<CreateDatasetModalProps> = ({
   );
 };
 
-type DelteDatasetModalProps = {
-  datasetToDelete: string;
-  onSubmit(): void | Promise<void>;
+type DeleteDatasetModalProps = {
+  datasetName : string;
+  onSubmit(datasetName: string): void | Promise<void>;
   open: boolean;
   onClose(): void;
   loading: boolean;
+};
+
+export const DeleteDatasetModal: React.FC<DeleteDatasetModalProps> = ({
+  datasetName,
+  onSubmit,
+  open,
+  onClose,
+  loading,
+}) => {
+  const handleCancel = useCallback(() => {
+    onClose();
+  }, [onClose]);
+  const handleOk = useCallback(() => {
+    void onSubmit(datasetName);
+  }, [datasetName, onSubmit]);
+
+  return (
+    <>
+      <Modal
+        open={open}
+        onCancel={handleCancel}
+        onOk={handleOk}
+        title="Delete a Dataset"
+        confirmLoading={loading}
+      >
+        <p>Are you sure you want to delete this dataset? This cannot be undone!</p>
+      </Modal>
+    </>
+  );
 };
 
 export default withAuth(DashboardPage);
