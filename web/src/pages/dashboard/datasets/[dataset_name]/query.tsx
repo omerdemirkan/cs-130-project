@@ -14,7 +14,7 @@ import { Button, Drawer, Input, Space, Table, Tooltip } from "antd";
 import { message, Upload } from "antd";
 import { useSparqlEditorStore } from "../../../../client/store/editor";
 import { NetworkGraph } from "../../../../client/components/NetworkGraph";
-import { useGraphStore } from "../../../../client/store/graph";
+import { GraphEdge, useGraphStore } from "../../../../client/store/graph";
 import { api } from "../../../../utils/api";
 import type { GraphNode } from "../../../../client/store/graph";
 import { Header } from "../../../../client/components/Header";
@@ -90,6 +90,13 @@ function QueryPage() {
     removeNodeById(node.id);
   }
 
+  async function handleEdgeClicked(edge: GraphEdge) {
+    await messageApi.open({
+      content: edge.id,
+      type: "success",
+    });
+  }
+
   return (
     <>
       {messageContextHolder}
@@ -128,7 +135,7 @@ function QueryPage() {
         <PagePadding>
           <div id="graph-header" className="flex justify-between">
             <div className="w-2/3">
-              <SearchBar 
+              <SearchBar
                 onSearch={(val) =>
                   void handleNodeSearch({
                     id: val,
@@ -175,6 +182,9 @@ function QueryPage() {
               onNodeContextMenu={(networkNode) =>
                 handleNodeRightClicked(networkNode.data)
               }
+              onEdgeClick={(edgeNode) => {
+                handleEdgeClicked(edgeNode.data);
+              }}
             />
           </main>
           <div className="z-2 absolute m-5 w-72 rounded-md bg-slate-200 bg-opacity-90 px-2 py-2 pb-2">
