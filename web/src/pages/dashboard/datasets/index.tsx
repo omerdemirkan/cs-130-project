@@ -9,6 +9,7 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
 import { api } from "../../../utils/api";
 import { Header } from "../../../client/components/Header";
+import { PagePadding } from "../../../client/components/PagePadding";
 
 /**
  * A component representing the dashboard page which is displayed after signing
@@ -50,60 +51,74 @@ const DashboardPage: React.FC = () => {
         loading={createDatasetMutation.isLoading}
       />
       <DeleteDatasetModal
-        datasetName = {datasetToDelete}
+        datasetName={datasetToDelete}
         open={deleteDatasetModalOpen}
         onClose={() => setDeleteDatasetModalOpen(false)}
         onSubmit={deleteDataset}
         loading={deleteDatasetMutation.isLoading}
       />
-      <Header
-        username= {sessionData && (sessionData.user?.name as string) }
-        image={sessionData && sessionData.user?.image as string}
-        itemList = {
-          [{
-            title: "Datasets",
-            href: '/dashboard/datasets'
-          }]
-        }
-      />
-      <div id="database-field" className="h-screen w-screen bg-slate-200">
-        <h1 className="ml-5">Datasets</h1>
-        <div id="create-dataset-button" className="mb-5 ml-5">
-          <Button type="primary" onClick={() => setCreateDatasetModalOpen(true)}>
-            Create new dataset
-          </Button>
-        </div>
+      <PagePadding>
+        <Header
+          username={sessionData && (sessionData.user?.name as string)}
+          image={sessionData && (sessionData.user?.image as string)}
+          itemList={[
+            {
+              title: "Datasets",
+              href: "/dashboard/datasets",
+            },
+          ]}
+        />
+      </PagePadding>
+      <div id="database-field" className="h-screen bg-slate-200">
+        <PagePadding>
+          <h1>Datasets</h1>
+          <div id="create-dataset-button" className="mb-5">
+            <Button
+              type="primary"
+              onClick={() => setCreateDatasetModalOpen(true)}
+            >
+              Create new dataset
+            </Button>
+          </div>
           {serverDataQuery.data?.datasets?.length === 0 ? (
-          <div id="dataset-list" className="ml-5 flex flex-row flex-wrap">
-            <Card title="Hmm, looks like you don&apos;t have any datasets"/>
-          </div>
+            <div id="dataset-list" className="flex flex-row flex-wrap">
+              <Card title="Hmm, looks like you don't have any datasets" />
+            </div>
           ) : null}
-        {serverDataQuery.data?.datasets?.length ? (
-          <div id="dataset-list" className="ml-5 flex flex-row flex-wrap">
-          {!!serverDataQuery.data && serverDataQuery.isLoading ? (
-            <p>Datasets are loading</p>
+          {serverDataQuery.data?.datasets?.length ? (
+            <div id="dataset-list" className="flex flex-row flex-wrap">
+              {!!serverDataQuery.data && serverDataQuery.isLoading ? (
+                <p>Datasets are loading</p>
+              ) : null}
+              {serverDataQuery.data.datasets.map((dataset) => (
+                <Card
+                  title={"Dataset Name: " + dataset["ds.name"]}
+                  className="mr-4 mb-4 basis-1/4"
+                  key={dataset["ds.name"]}
+                >
+                  <div className="datasetButtons flex flex-row-reverse">
+                    <Button
+                      className="ml-3"
+                      danger
+                      onClick={() => {
+                        setDeleteDatasetModalOpen(true);
+                        setDatasetToDelete(dataset["ds.name"]);
+                      }}
+                    >
+                      Delete
+                    </Button>
+                    <Link
+                      href="/dashboard/datasets/[dataset_name]/query"
+                      as={`/dashboard/datasets${dataset["ds.name"]}/query`}
+                    >
+                      <Button type="primary">Query</Button>
+                    </Link>
+                  </div>
+                </Card>
+              ))}
+            </div>
           ) : null}
-            {serverDataQuery.data.datasets.map((dataset) => (
-              <Card
-                title={"Dataset Name: "+ dataset["ds.name"]}
-                className="mr-4 mb-4 basis-1/4"
-                key={dataset["ds.name"]}
-              >
-                <div className="datasetButtons flex flex-row-reverse">
-                  <Button className="ml-3" danger onClick={() => {setDeleteDatasetModalOpen(true); setDatasetToDelete(dataset["ds.name"])}}>
-                    Delete
-                  </Button>
-                  <Link
-                    href="/dashboard/datasets/[dataset_name]/query"
-                    as={`/dashboard/datasets${dataset["ds.name"]}/query`}
-                  >
-                    <Button type="primary">Query</Button>
-                  </Link>
-                </div>
-              </Card>
-            ))}
-          </div>
-        ) : null}
+        </PagePadding>
       </div>
     </div>
   );
@@ -159,7 +174,7 @@ export const CreateDatasetModal: React.FC<CreateDatasetModalProps> = ({
 };
 
 type DeleteDatasetModalProps = {
-  datasetName : string;
+  datasetName: string;
   onSubmit(datasetName: string): void | Promise<void>;
   open: boolean;
   onClose(): void;
@@ -189,7 +204,9 @@ export const DeleteDatasetModal: React.FC<DeleteDatasetModalProps> = ({
         title="Delete a Dataset"
         confirmLoading={loading}
       >
-        <p>Are you sure you want to delete this dataset? This cannot be undone!</p>
+        <p>
+          Are you sure you want to delete this dataset? This cannot be undone!
+        </p>
       </Modal>
     </>
   );

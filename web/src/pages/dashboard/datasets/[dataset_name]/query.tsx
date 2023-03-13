@@ -18,6 +18,7 @@ import { useGraphStore } from "../../../../client/store/graph";
 import { api } from "../../../../utils/api";
 import type { GraphNode } from "../../../../client/store/graph";
 import { Header } from "../../../../client/components/Header";
+import { PagePadding } from "../../../../client/components/PagePadding";
 
 const { Dragger } = Upload;
 
@@ -106,14 +107,14 @@ function QueryPage() {
         id="content-wrapper"
         className="flex h-screen flex-col justify-center"
       >
-        <Header
-          username= {sessionData && (sessionData.user?.name as string) }
-          image={sessionData && sessionData.user?.image as string}
-          itemList = {
-            [
+        <PagePadding>
+          <Header
+            username={sessionData && (sessionData.user?.name as string)}
+            image={sessionData && (sessionData.user?.image as string)}
+            itemList={[
               {
                 title: "Datasets",
-                href: '/dashboard/datasets'
+                href: "/dashboard/datasets",
               },
               {
                 title: datasetName,
@@ -121,14 +122,11 @@ function QueryPage() {
               {
                 title: "Query",
               },
-            ]
-          }
-        />
-        <div
-          id="graph-header"
-          className="flex justify-center space-x-4 bg-white py-3 px-3 border-slate-500 border-b-8 "
-        >
-          <div id="search-bar" className="w-2/3">
+            ]}
+          />
+        </PagePadding>
+        <PagePadding>
+          <div id="graph-header" className="flex justify-between">
             <SearchBar
               onSearch={(val) =>
                 void handleNodeSearch({
@@ -138,14 +136,26 @@ function QueryPage() {
                 })
               }
             />
+            <span>
+              <Button
+                className="mr-4"
+                type="primary"
+                onClick={() => setEditorDrawerOpen(true)}
+              >
+                Write SPARQL Query
+              </Button>
+              <Button
+                type="primary"
+                onClick={() =>
+                  saveGraph.mutateAsync({ nodes: nodes, edges: edges })
+                }
+              >
+                Share graph
+              </Button>
+            </span>
           </div>
-          <Button type="primary" onClick={() => setEditorDrawerOpen(true)}>
-            Write SPARQL Query
-          </Button>
-          <Button type="primary" onClick={() => saveGraph.mutateAsync({nodes: nodes, edges: edges})}>
-            Share graph
-          </Button>
-        </div>
+        </PagePadding>
+        <hr className="mt-4 mb-0 w-full" />
         <div className="flex justify-center">
           {/*<ProcedureTest/> Commenting this out for now to test visual things*/}
         </div>

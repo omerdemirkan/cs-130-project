@@ -17,11 +17,6 @@ body {
   padding: 0;
 }
 
-.ant-breadcrumb > ol{
-  align-items:center;
-}
-
-#graph-header{
-  border-bottom: 2px solid rgb(207, 207, 207);
-  border-radius:4px;
+.ant-breadcrumb > ol {
+  align-items: center;
 }
