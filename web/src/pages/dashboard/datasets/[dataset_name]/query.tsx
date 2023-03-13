@@ -168,6 +168,7 @@ function QueryPage() {
               // draggable
               // Note: We might want to use this for the sharing part, but for now it causes weird issues, so no dragging during construction. - Satsuki
               labelType="all"
+              draggable
               nodes={nodes}
               edges={edges}
               onNodeClick={(networkNode) => handleNodeClicked(networkNode.data)}

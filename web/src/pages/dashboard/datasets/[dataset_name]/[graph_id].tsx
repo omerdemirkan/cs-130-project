@@ -20,6 +20,7 @@ function ReadPage() {
         <main className="h-full flex-shrink flex-grow">
           <NetworkGraph
             labelType="all"
+            draggable
             nodes={graphContents.nodes}
             edges={graphContents.edges}
           />
