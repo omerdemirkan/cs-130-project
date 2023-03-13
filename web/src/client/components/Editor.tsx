@@ -1,3 +1,6 @@
+/**
+ * @module web/client
+ */
 import dynamic from "next/dynamic";
 
 const AceEditor = dynamic(
@@ -24,6 +27,7 @@ type EditorProps = {
 
 /**
  * A component representing the editor for sending SPARQL queries.
+ * @category Components
  */
 export const Editor: React.FC<EditorProps> = ({ value, onChange }) => {
   return (

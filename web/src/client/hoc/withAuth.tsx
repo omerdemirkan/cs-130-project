@@ -1,9 +1,13 @@
+/**
+ * @module web/client
+ */
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 /**
  * A component representing the status of an authentication request.
+ * @category Components
  */
 export function withAuth(WithoutAuthComponent: React.FC): React.FC {
   const WithAuthComponent: React.FC = (props) => {

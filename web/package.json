@@ -9,7 +9,9 @@
     "lint": "next lint",
     "start": "next start",
     "fuseki": "cd ../apache-fuseki && java -Xmx1200M -jar ./fuseki-server.jar --mem /",
-    "test": "jest --config ./jest.config.cjs"
+    "test": "jest --config ./jest.config.cjs",
+    "docs": "npx typedoc --out api --entryPointStrategy expand --mergeModulesMergeMode module --entryPoints ./src/client ./src/pages/dashboard ./src/pages/index.tsx ./src/server/ ./src/utils/api.ts ./src/utils/fuseki.ts",
+    "demo": "concurrently --kill-others \"next dev\" \"npm run fuseki\" \"npx live-server api\""
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.5",
@@ -58,8 +60,7 @@
     "tailwindcss": "^3.2.0",
     "ts-jest": "^29.0.5",
     "typedoc": "^0.23.26",
-    "typedoc-github-wiki-theme": "^1.0.1",
-    "typedoc-plugin-markdown": "^3.14.0",
+    "typedoc-plugin-merge-modules": "^4.0.1",
     "typescript": "^4.9.4"
   },
   "ct3aMetadata": {
