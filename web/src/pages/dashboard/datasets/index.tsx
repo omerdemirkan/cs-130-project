@@ -4,7 +4,7 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { withAuth } from "../../../client/hoc/withAuth";
-import { Button, Input, Modal } from "antd";
+import { Button, Input, Modal, Card } from "antd";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
 import { api } from "../../../utils/api";
@@ -66,40 +66,41 @@ const DashboardPage: React.FC = () => {
           }]
         }
       />
-      <div id="database-field" className="h-screen w-screen bg-slate-600">
-        <h1 className="ml-5 text-slate-50">Datasets</h1>
+      <div id="database-field" className="h-screen w-screen bg-slate-200">
+        <h1 className="ml-5">Datasets</h1>
         <div id="create-dataset-button" className="mb-5 ml-5">
-          <Button onClick={() => setCreateDatasetModalOpen(true)}>
+          <Button type="primary" onClick={() => setCreateDatasetModalOpen(true)}>
             Create new dataset
           </Button>
         </div>
-        {serverDataQuery.data?.datasets?.length === 0 ? (
-          <p>Hmm, looks like you don&apos;t have any datasets</p>
-        ) : null}
-        {!!serverDataQuery.data && serverDataQuery.isLoading ? (
-          <p>Datasets are loading</p>
-        ) : null}
+          {serverDataQuery.data?.datasets?.length === 0 ? (
+          <div id="dataset-list" className="ml-5 flex flex-row flex-wrap">
+            <Card title="Hmm, looks like you don&apos;t have any datasets"/>
+          </div>
+          ) : null}
         {serverDataQuery.data?.datasets?.length ? (
           <div id="dataset-list" className="ml-5 flex flex-row flex-wrap">
+          {!!serverDataQuery.data && serverDataQuery.isLoading ? (
+            <p>Datasets are loading</p>
+          ) : null}
             {serverDataQuery.data.datasets.map((dataset) => (
-              <div
-                className="mr-4 mb-4 basis-1/4 bg-slate-300"
+              <Card
+                title={"Dataset Name: "+ dataset["ds.name"]}
+                className="mr-4 mb-4 basis-1/4"
                 key={dataset["ds.name"]}
               >
-                <p className="ml-4">Dataset Name: {dataset["ds.name"]}</p>
-                <div className="datasetButtons ml-4">
+                <div className="datasetButtons flex flex-row-reverse">
+                  <Button className="ml-3" danger onClick={() => {setDeleteDatasetModalOpen(true); setDatasetToDelete(dataset["ds.name"])}}>
+                    Delete
+                  </Button>
                   <Link
                     href="/dashboard/datasets/[dataset_name]/query"
                     as={`/dashboard/datasets${dataset["ds.name"]}/query`}
                   >
-                    <Button>Query</Button>
+                    <Button type="primary">Query</Button>
                   </Link>
-                  <Button onClick={() => {setDeleteDatasetModalOpen(true); setDatasetToDelete(dataset["ds.name"])}}>
-                    Delete
-                  </Button>
                 </div>
-                <hr />
-              </div>
+              </Card>
             ))}
           </div>
         ) : null}
