@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import { Breadcrumb } from 'antd';
+import { signOut } from 'next-auth/react';
 
 type HeaderProps = {
   username: string | null;
@@ -8,15 +9,30 @@ type HeaderProps = {
 };
 
 export const Header: React.FC<HeaderProps> = ({ username, image, itemList }) => {
-  const userProfile = 
-    <p className="flex ml-4 my-0 mb-0 text-start items-center">
-      <img className="rounded-full h-8 w-8 mr-3" src={image as string}/>
-      <p>{username}</p>
-    </p>;
-  const head = [{"title":userProfile}]
+  const head = [
+    {
+      title: username,
+      menu: { 
+        items:
+          [
+            {
+              key: '1',
+              label: (
+              <span
+                onClick={() => void signOut()}
+              >
+                Sign out
+              </span>)
+            }
+          ]
+      }
+    }
+  ]
   const realList = head.concat(itemList);
+  console.log(realList);
   return (
-    <div id="header-wrapper" className="w-screen bg-white items-center">
+    <div id="header-wrapper" className="flex w-screen bg-white items-center h-16">
+      <img className="rounded-full h-8 w-8 mr-3 ml-3" src={image as string}/>
       <Breadcrumb
         items={realList}
       />
