@@ -29,4 +29,4 @@ function ReadPage() {
   );
 }
 
-export default withAuth(ReadPage);
+export default ReadPage;
