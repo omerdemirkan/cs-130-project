@@ -5,6 +5,7 @@ import { Button, Input, Modal } from "antd";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/router";
 import { api } from "../../../utils/api";
+import { Header } from "../../../client/components/Header";
 
 /**
  * A component representing the dashboard page which is displayed after signing
@@ -42,18 +43,16 @@ const DashboardPage: React.FC = () => {
         onSubmit={createDataset}
         loading={createDatasetMutation.isLoading}
       />
-      <div id="dashboard-header" className="w-screen bg-slate-200">
-        <p className="mx-4 text-end">
-          {sessionData && (
-            <span>
-              Logged in as{" "}
-              <a href={"https://github.com/" + sessionData.user?.name}>
-                {sessionData.user?.name}
-              </a>
-            </span>
-          )}
-        </p>
-      </div>
+      <Header
+        username= {sessionData && (sessionData.user?.name as string) }
+        image={sessionData && sessionData.user?.image as string}
+        itemList = {
+          [{
+            title: "Datasets",
+            href: '/dashboard/datasets'
+          }]
+        }
+      />
       <div id="database-field" className="h-screen w-screen bg-slate-600">
         <h1 className="ml-5 text-slate-50">Datasets</h1>
         <div id="create-dataset-button" className="mb-5 ml-5">

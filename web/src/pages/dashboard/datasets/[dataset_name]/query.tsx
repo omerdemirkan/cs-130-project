@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import { withAuth } from "../../../../client/hoc/withAuth";
 import type {
   FusekiQueryResult,
@@ -16,6 +17,7 @@ import { NetworkGraph } from "../../../../client/components/NetworkGraph";
 import { useGraphStore } from "../../../../client/store/graph";
 import { api } from "../../../../utils/api";
 import type { GraphNode } from "../../../../client/store/graph";
+import { Header } from "../../../../client/components/Header";
 
 const { Dragger } = Upload;
 
@@ -25,6 +27,7 @@ const { Dragger } = Upload;
  * a modal for making SPARQL searches, and the graph vizualizer itself.
  */
 function QueryPage() {
+  const { data: sessionData } = useSession();
   const [messageApi, messageContextHolder] = message.useMessage();
   const [editorDrawerOpen, setEditorDrawerOpen] = useState(false);
   const router = useRouter();
@@ -93,9 +96,27 @@ function QueryPage() {
         id="content-wrapper"
         className="flex h-screen flex-col justify-center"
       >
+        <Header
+          username= {sessionData && (sessionData.user?.name as string) }
+          image={sessionData && sessionData.user?.image as string}
+          itemList = {
+            [
+              {
+                title: "Datasets",
+                href: '/dashboard/datasets'
+              },
+              {
+                title: datasetName,
+              },
+              {
+                title: "Query",
+              },
+            ]
+          }
+        />
         <div
           id="graph-header"
-          className="flex justify-center space-x-4 bg-slate-700 py-3 px-3"
+          className="flex justify-center space-x-4 bg-white py-3 px-3 border-slate-500 border-b-8 "
         >
           <div id="search-bar" className="w-2/3">
             <SearchBar
@@ -108,10 +129,10 @@ function QueryPage() {
               }
             />
           </div>
-          <Button onClick={() => setEditorDrawerOpen(true)}>
+          <Button type="primary" onClick={() => setEditorDrawerOpen(true)}>
             Write SPARQL Query
           </Button>
-          <Button onClick={() => saveGraph.mutateAsync({nodes: nodes, edges: edges})}>
+          <Button type="primary" onClick={() => saveGraph.mutateAsync({nodes: nodes, edges: edges})}>
             Share graph
           </Button>
         </div>
