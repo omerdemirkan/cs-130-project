@@ -16,6 +16,7 @@ const DashboardPage: React.FC = () => {
   const { data: sessionData } = useSession();
   const [createDatasetModalOpen, setCreateDatasetModalOpen] = useState(false);
   const [deleteDatasetModalOpen, setDeleteDatasetModalOpen] = useState(false);
+  const [datasetToDelete, setDatasetToDelete] = useState("");
 
   const serverDataQuery = api.fuseki.getServerData.useQuery();
   const createDatasetMutation = api.fuseki.createDataset.useMutation();
@@ -31,6 +32,7 @@ const DashboardPage: React.FC = () => {
   async function deleteDataset(datasetName: string) {
     await deleteDatasetMutation.mutateAsync({ datasetName });
     serverDataQuery.refetch();
+    setDeleteDatasetModalOpen(false);
   }
 
   const router = useRouter();
@@ -42,6 +44,13 @@ const DashboardPage: React.FC = () => {
         onClose={() => setCreateDatasetModalOpen(false)}
         onSubmit={createDataset}
         loading={createDatasetMutation.isLoading}
+      />
+      <DeleteDatasetModal
+        datasetName = {datasetToDelete}
+        open={deleteDatasetModalOpen}
+        onClose={() => setDeleteDatasetModalOpen(false)}
+        onSubmit={deleteDataset}
+        loading={deleteDatasetMutation.isLoading}
       />
       <Header
         username= {sessionData && (sessionData.user?.name as string) }
@@ -81,7 +90,7 @@ const DashboardPage: React.FC = () => {
                   >
                     <Button>Query</Button>
                   </Link>
-                  <Button onClick={() => deleteDataset(dataset["ds.name"])}>
+                  <Button onClick={() => {setDeleteDatasetModalOpen(true); setDatasetToDelete(dataset["ds.name"])}}>
                     Delete
                   </Button>
                 </div>
@@ -143,12 +152,41 @@ export const CreateDatasetModal: React.FC<CreateDatasetModalProps> = ({
   );
 };
 
-type DelteDatasetModalProps = {
-  datasetToDelete: string;
-  onSubmit(): void | Promise<void>;
+type DeleteDatasetModalProps = {
+  datasetName : string;
+  onSubmit(datasetName: string): void | Promise<void>;
   open: boolean;
   onClose(): void;
   loading: boolean;
+};
+
+export const DeleteDatasetModal: React.FC<DeleteDatasetModalProps> = ({
+  datasetName,
+  onSubmit,
+  open,
+  onClose,
+  loading,
+}) => {
+  const handleCancel = useCallback(() => {
+    onClose();
+  }, [onClose]);
+  const handleOk = useCallback(() => {
+    void onSubmit(datasetName);
+  }, [datasetName, onSubmit]);
+
+  return (
+    <>
+      <Modal
+        open={open}
+        onCancel={handleCancel}
+        onOk={handleOk}
+        title="Delete a Dataset"
+        confirmLoading={loading}
+      >
+        <p>Are you sure you want to delete this dataset? This cannot be undone!</p>
+      </Modal>
+    </>
+  );
 };
 
 export default withAuth(DashboardPage);
